@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 mast
 ====
 
@@ -32,3 +33,9 @@ Tree
 - extends component
 - designed for modeling dependency lists
 - contains an N-ary tree of Components and methods to manage the tree
+=======
+sails-example
+=============
+
+example w/ sails
+>>>>>>> 4d5b487a1ba293df56b7f45c07f693a6a30caa49
