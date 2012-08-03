@@ -1,3 +1,5 @@
+nbproject
+.netbeans
 *#
 node_modules
 ssl
@@ -6,7 +8,7 @@ ssl
 .idea
 
 # Ignore config file w/ sensitive information
-config/db.js
+config.js
 
 # Ignore dev minified/compiled assets
 public/stylesheets/_*.css
@@ -15,3 +17,5 @@ public/js/_*.js
 # Ignore production minified/compiled assets
 public/_target/*.js
 public/_target/*.css
+
+npm-debug.log
