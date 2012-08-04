@@ -1,8 +1,14 @@
 var ExperimentController = {
 	
 	index: function (req,res) {
-		console.log(req.params.id);
-		res.view();
+		console.log("INDEX");
+		if (req.xhr) {
+			return this.findAll();
+		}
+		else {
+			console.log(req.params.id);
+			res.view();
+		}
 	},
 	
 	
@@ -25,15 +31,23 @@ var ExperimentController = {
 		Experiment.create({
 			title: req.param('title'),
 			value: req.param('value')
-		}).success(function(outcome) {
-			res.json({success:true});
+		}).success(function(experiment) {
+			res.json({
+				id: experiment.id,
+				success:true
+			});
 		});
 	},
 	
 	// Edit an existing model
 	update: function (req,res) {
-		Experiment.find({where:{id: req.param('id')}}).success(function(outcome) {
-			res.json({success:true});
+		Experiment.find({where:{id: req.param('id')}}).success(function(experiment) {
+			experiment.updateAttributes({
+				title: req.param('title'),
+				value: req.param('value')
+			}).success(function(outcome){
+				res.json({success:true});
+			});
 		});
 	},
 	
@@ -41,7 +55,6 @@ var ExperimentController = {
 		var id = req.param('id');
 		
 		Experiment.find(id).success(function(experiment) {
-			console.log("THEOUTCOME::::",experiment);
 			experiment.destroy().success(function(outcome){
 				res.json({
 					success:true

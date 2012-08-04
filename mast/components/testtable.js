@@ -42,6 +42,8 @@ Mast.components.TestRow = Mast.Component.extend({
 	
 	updateRow: function(value) {
 		this.set('title',value);
+		console.log("FIRED UPDATEROW!!!!!");
+		this.pattern.model.save();
 	}
 });
 
@@ -67,12 +69,19 @@ Mast.components.TestTable = Mast.Table.extend({
 	
 	collection: "TestRows",
 	
+	model: Mast.Model.extend({
+		defaults: {
+			testtitle:'works?'
+		}
+	}),
+	
 	// Called only after the socket is live
 	afterConnect: function() {
 		// Only fire afterConnect once, even if a reconnect happens
 		Mast.Socket.off('connect', this.afterConnect);
 		
 		var self = this;
+		
 		this.collection.fetch({
 			error: function(stuff){
 				throw new Error(stuff);
@@ -82,7 +91,8 @@ Mast.components.TestTable = Mast.Table.extend({
 	
 	addRow: function(e) {
 		// Create a random new row
-		this.collection.create();
+		var a = this.collection.create();
+		
 	},
 	
 	deselectAll: function(e) {
