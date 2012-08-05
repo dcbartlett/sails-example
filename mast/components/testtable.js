@@ -24,20 +24,11 @@ Mast.components.TestRow = Mast.Component.extend({
 		var rowModel = this.model;
 		if (rowModel.get('highlighted')) {
 			this.set('highlighted',false);
-			
-			console.log(this);
 			this.save();
-			//			debug.debug("Dimming row w/ id: "+rowModel.id+" @ index: "+rowId);
-//			rowModel.set('highlighted',false);
-//			rowModel.save({silent:true});
 		}
 		else {
-			console.log(this);
 			this.set('highlighted',true);
 			this.save();
-			//			debug.debug("Highlighting row w/ id: "+rowModel.id+" @ index: "+rowId);
-//			rowModel.set('highlighted',true);
-//			rowModel.save({silent:true});
 		}
 	},
 	
@@ -53,7 +44,6 @@ Mast.components.TestRow = Mast.Component.extend({
 		self = this;
 		this.set('title',value, {
 			render: function ($current, $new) {
-				console.log(self);
 				$current.fadeTo(350,0.001,function(){
 					$current.replaceWith($new);
 					$new.hide();
@@ -63,7 +53,8 @@ Mast.components.TestRow = Mast.Component.extend({
 				});
 			}
 		});
-		this.pattern.model.save(null,{silent:true});
+		self.save();
+//		this.pattern.model.save(null,{silent:true});
 	}
 });
 
@@ -118,6 +109,7 @@ Mast.components.TestTable = Mast.Table.extend({
 	deselectAll: function(e) {
 		this.collection.each(function(model){
 			model.set('highlighted',false);
+			model.save();
 		});
 	}
 });

@@ -15,7 +15,8 @@ Mast.models.TestRows = Mast.Collection.extend({
 	_class: 'TestRows',
 	url: '/experiment',
 	model: Mast.models.TestRow,
-	select: function(attributes) {
-		this.get(attributes.id).set({highlighted:attributes.highlighted});
+	update: function(attributes) {
+		this.get(attributes.id).set(attributes);
+//		this.get(attributes.id).set({highlighted:attributes.highlighted});
 	}
 });

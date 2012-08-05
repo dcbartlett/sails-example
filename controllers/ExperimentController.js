@@ -59,9 +59,11 @@ var ExperimentController = {
 
 					req.socket.broadcast.to('tableViewers').json.send({
 						model: 'TestRows',
-						method: 'select',
+						method: 'update',
 						id: req.param('id'),
-						highlighted: req.param('highlighted')
+						highlighted: req.param('highlighted'),
+						title: req.param('title'),
+						value: req.param('value')
 					})
 
 					res.json({success:true});
