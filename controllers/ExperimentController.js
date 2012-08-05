@@ -27,12 +27,7 @@ var ExperimentController = {
 		
 		// Join room
 		if (req.socket) {
-			console.log("**** JOINING ROOM ****");
-			req.socket.join('testRoom');
-			req.socket.broadcast.to('testRoom').json.send({
-				method: 'test',
-				test:true
-			});
+			req.socket.join('tableViewers');
 		}
 	},
 	
@@ -62,7 +57,8 @@ var ExperimentController = {
 					highlighted: req.param('highlighted')
 				}).success(function(outcome){
 
-					req.socket.broadcast.to('testRoom').json.send({
+					req.socket.broadcast.to('tableViewers').json.send({
+						model: 'TestRows',
 						method: 'select',
 						id: req.param('id'),
 						highlighted: req.param('highlighted')
