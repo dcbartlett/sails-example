@@ -41,9 +41,20 @@ Mast.components.TestRow = Mast.Component.extend({
 	},
 	
 	updateRow: function(value) {
-		this.set('title',value);
-		console.log("FIRED UPDATEROW!!!!!");
-		this.pattern.model.save();
+		self = this;
+		this.set('title',value, {
+			render: function ($current, $new) {
+				console.log(self);
+				$current.fadeTo(350,0.001,function(){
+					$current.replaceWith($new);
+					$new.hide();
+					self.setElement($new);
+					self.renderSubcomponents();
+					$new.fadeIn(150);
+				});
+			}
+		});
+		this.pattern.model.save(null,{silent:true});
 	}
 });
 
