@@ -24,6 +24,16 @@ var ExperimentController = {
 		Experiment.fetch(null,function(experiments) {
 			res.json(experiments);
 		});
+		
+		// Join room
+		if (req.socket) {
+			console.log("**** JOINING ROOM ****");
+			req.socket.join('testRoom');
+			req.socket.broadcast.to('testRoom').json.send({
+				method: 'test',
+				test:true
+			});
+		}
 	},
 	
 	// Store a new model
@@ -42,12 +52,25 @@ var ExperimentController = {
 	// Edit an existing model
 	update: function (req,res) {
 		Experiment.find({where:{id: req.param('id')}}).success(function(experiment) {
-			experiment.updateAttributes({
-				title: req.param('title'),
-				value: req.param('value')
-			}).success(function(outcome){
-				res.json({success:true});
-			});
+			if (!experiment) {
+				res.json({success:false});
+			}
+			else {
+				experiment.updateAttributes({
+					title: req.param('title'),
+					value: req.param('value'),
+					highlighted: req.param('highlighted')
+				}).success(function(outcome){
+
+					req.socket.broadcast.to('testRoom').json.send({
+						method: 'select',
+						id: req.param('id'),
+						highlighted: req.param('highlighted')
+					})
+
+					res.json({success:true});
+				});
+			}
 		});
 	},
 	

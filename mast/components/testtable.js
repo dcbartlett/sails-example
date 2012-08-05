@@ -25,10 +25,12 @@ Mast.components.TestRow = Mast.Component.extend({
 		if (rowModel.get('highlighted')) {
 			//			debug.debug("Dimming row w/ id: "+rowModel.id+" @ index: "+rowId);
 			rowModel.set('highlighted',false);
+			rowModel.save({silent:true});
 		}
 		else {
 			//			debug.debug("Highlighting row w/ id: "+rowModel.id+" @ index: "+rowId);
 			rowModel.set('highlighted',true);
+			rowModel.save({silent:true});
 		}
 	},
 	
