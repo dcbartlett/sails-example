@@ -6,11 +6,11 @@ Mast.routes.tableExample = function(query,page){
 	// Now let's try creating a Table
 	// A Table is basically just a Component which contains 
 	// a homogenous list of sub-Components
-	t = new Mast.components.TestTable();
+	this.testTable = new Mast.components.TestTable();
 
 	// Finally, let's create another button for the user to go back
 	// to the previous example		
-	bb=new Mast.Button({
+	this.previousButton = new Mast.Button({
 		label: '< Previous: Components',
 		click: function(e) {
 			Mast.navigate('index');
@@ -19,7 +19,7 @@ Mast.routes.tableExample = function(query,page){
 	});
 	
 	// On to the next experiment
-	ba=new Mast.Button({
+	this.nextButton = new Mast.Button({
 		label: 'Next: Subcomponents >',
 		click: function(e) {
 			Mast.navigate('subcomponents');

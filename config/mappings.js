@@ -29,42 +29,15 @@ exports.customMappings = function () {
 			action: 'testjson'
 		}
 		, '/403': '/login'
-		
-		
-		// Temporary mappings b/c of socket.io wildcard deficiency
-		, '/experiment/fetch': {
-			controller: 'experiment',
-			action: 'fetch'
-		}
-		, '/experiment/findAll': {
-			controller: 'experiment',
-			action: 'findAll'
-		}
-		, '/experiment/find': {
-			controller: 'experiment',
-			action: 'find'
-		}
-		, '/experiment/destroy': {
-			controller: 'experiment',
-			action: 'destroy'
-		}
-		, '/experiment/create': {
-			controller: 'experiment',
-			action: 'create'
-		}
-		, '/experiment/update': {
-			controller: 'experiment',
-			action: 'update'
-		}
 	}
 };
 
 
-exports.defaultMappings = function () {
-	return {
-		'/': {controller:'meta',action:'home'},
-		'/500': {controller:'meta',action:'error'}, 
-		'/404': {controller:'meta',action:'notfound'},
-		'/403': {controller:'meta',action:'denied'}
-	};
-}
+//exports.defaultMappings = function () {
+//	return {
+//		'/': {controller:'meta',action:'home'},
+//		'/500': {controller:'meta',action:'error'}, 
+//		'/404': {controller:'meta',action:'notfound'},
+//		'/403': {controller:'meta',action:'denied'}
+//	};
+//}

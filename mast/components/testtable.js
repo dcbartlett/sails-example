@@ -23,14 +23,21 @@ Mast.components.TestRow = Mast.Component.extend({
 	toggleRow: function(e) {
 		var rowModel = this.model;
 		if (rowModel.get('highlighted')) {
+			this.set('highlighted',false);
+			
+			console.log(this);
+			this.save();
 			//			debug.debug("Dimming row w/ id: "+rowModel.id+" @ index: "+rowId);
-			rowModel.set('highlighted',false);
-			rowModel.save({silent:true});
+//			rowModel.set('highlighted',false);
+//			rowModel.save({silent:true});
 		}
 		else {
+			console.log(this);
+			this.set('highlighted',true);
+			this.save();
 			//			debug.debug("Highlighting row w/ id: "+rowModel.id+" @ index: "+rowId);
-			rowModel.set('highlighted',true);
-			rowModel.save({silent:true});
+//			rowModel.set('highlighted',true);
+//			rowModel.save({silent:true});
 		}
 	},
 	
