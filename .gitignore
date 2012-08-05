@@ -8,6 +8,7 @@ ssl
 .idea
 
 # Ignore config file w/ sensitive information
+config/db.js
 config.js
 
 # Ignore dev minified/compiled assets
@@ -18,4 +19,5 @@ public/js/_*.js
 public/_target/*.js
 public/_target/*.css
 
-npm-debug.log
+# Ignore compiled LESS
+mast/templates/less-output.css
