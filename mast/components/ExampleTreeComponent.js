@@ -27,15 +27,11 @@ Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 	},
 	
 	deleteTree: function (e) {
-		// Stop event from propagating up to parent components
-		e.stopImmediatePropagation();
 	
 		this.parent.collection.remove(this.model);
 	},
 	
 	addTree: function (e) {
-		// Stop event from propagating up to parent components
-//		e.stopImmediatePropagation();
 		
 		this.collection.add({value: this.get('value')+1});
 	}

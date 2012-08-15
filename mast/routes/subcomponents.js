@@ -24,9 +24,9 @@ Mast.routes.subcomponents = function(query,page){
 	
 	// On to the next experiment
 	new Mast.Button({
-		label: 'Next: Demonstration >',
+		label: 'Next: Trees >',
 		click: function(e) {
-			Mast.navigate('demonstration');
+			Mast.navigate('treeExample');
 		},
 		outlet: '.sandbox'
 	});
