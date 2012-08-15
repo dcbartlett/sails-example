@@ -1,0 +1,12 @@
+.mast-tree {
+	padding:0.5em 0.5em 0em 1em;
+	border-left: 1px solid #999;
+/*	border-top: 1px solid #9f9f9f;*/
+}
+
+.mast-tree em {
+	font-style:italic;
+	color:#777;
+	padding-bottom:1.5em;
+	display:block;
+}
