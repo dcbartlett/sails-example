@@ -1,0 +1,12 @@
+<!--
+	REMEMBER:
+	Don't use IDs in css selectors for templates!
+	IDs are stripped from templates!
+-->
+
+<li class="row {% if (highlighted) { %} highlighted {% } %}" id="mast-template-exampleTree">
+	<span>{{-title}} | {{-value}} </span>
+	{% if (allowEdit) { %}<a class="doUpdate" style="cursor:pointer;"></a> {% } %}
+	<a class="doDelete" style="cursor:pointer;">x</a>
+	<div class="branchOutlet"></div>
+</li>
