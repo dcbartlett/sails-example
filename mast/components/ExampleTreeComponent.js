@@ -1,8 +1,8 @@
 Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 	
 	events: {
-		'click a.doDelete':'deleteTree' ,
-		'click a.addButton': 'addTree',
+		'click >a.doDelete':'deleteTree' ,
+		'click >a.addButton': 'addTree',
 		'contextmenu':	'_test'
 	},
 	outlet: '.sandbox',
@@ -30,12 +30,12 @@ Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 		// Stop event from propagating up to parent components
 		e.stopImmediatePropagation();
 	
-		this.destroy();
+		this.parent.collection.remove(this.model);
 	},
 	
 	addTree: function (e) {
 		// Stop event from propagating up to parent components
-		e.stopImmediatePropagation();
+//		e.stopImmediatePropagation();
 		
 		this.collection.add({value: this.get('value')+1});
 	}
