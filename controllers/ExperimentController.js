@@ -44,10 +44,12 @@ create: function (req,res) {
 		req.socket.broadcast.to('tableViewers').json.send({
 			model: 'TestRows',
 			method: '$create',
-			id: experiment.id,
-			highlighted: experiment.highlighted,
-			title: experiment.title,
-			value: experiment.value
+			attributes: {
+				id: experiment.id,
+				highlighted: experiment.highlighted,
+				title: experiment.title,
+				value: experiment.value
+			}
 		})
 					
 		res.json({
@@ -79,10 +81,12 @@ update: function (req,res) {
 			req.socket.broadcast.to('tableViewers').json.send({
 				model: 'TestRows',
 				method: '$update',
-				id: req.param('id'),
-				highlighted: req.param('highlighted'),
-				title: req.param('title'),
-				value: req.param('value')
+				attributes: {
+					id: req.param('id'),
+					highlighted: req.param('highlighted'),
+					title: req.param('title'),
+					value: req.param('value')
+				}
 			})
 
 			res.json({
@@ -101,7 +105,9 @@ destroy: function (req,res) {
 			req.socket.broadcast.to('tableViewers').json.send({
 				model: 'TestRows',
 				method: '$destroy',
-				id: req.param('id')
+				attributes: {
+					id: req.param('id')
+				}
 			})
 			res.json({
 				success:true
