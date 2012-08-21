@@ -6,6 +6,17 @@ Mast.components.TestRow = Mast.Component.extend({
 		'click': 'toggleRow'
 	},
 	
+	// Custom render bindings
+	bindings: {
+		title: function (newAttrValue) {
+			var $e = this.$el;
+			$e.fadeTo(150,0.001,function(){
+				$e.children('span').text(newAttrValue);
+				$e.fadeTo(150,1);
+			});
+		}
+	},
+	
 	// Called after initialization, before autorender
 	init: function () {
 	},
@@ -41,17 +52,17 @@ Mast.components.TestRow = Mast.Component.extend({
 	},
 	
 	updateRow: function(value) {
-		self = this;
+		var self = this;
 		this.set('title',value, {
-			render: function ($current, $new) {
-				$current.fadeTo(350,0.001,function(){
-					$current.replaceWith($new);
-					$new.hide();
-					self.setElement($new);
-					self.renderSubcomponents();
-					$new.fadeIn(150);
-				});
-			}
+//			render: function ($current, $new) {
+//				$current.fadeTo(350,0.001,function(){
+//					$current.replaceWith($new);
+//					$new.hide();
+//					self.setElement($new);
+//					self.renderSubcomponents();
+//					$new.fadeIn(150);
+//				});
+//			}
 		});
 		self.save();
 //		this.pattern.model.save(null,{silent:true});
