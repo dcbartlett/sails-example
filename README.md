@@ -1,3 +1,10 @@
+Note:
+--
+This example app uses an older version of the Rigging library from August.  Many things are the same, but the way that subcomponents work is undergoing a dramatic change.  
+There is also a lot more coming as far as rapid development-- we're implementing Meteor-like direct-from-client database CRUD, as well as some easier ways to get going with bindings.
+See the issues page for more details.
+
+
 Installing the app
 --
 
