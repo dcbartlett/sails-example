@@ -7,10 +7,10 @@ To install this demo app, first install Node.js and npm.  Then clone this repo a
 git clone git@github.com:balderdashy/sails-example.git sails-example && cd sails-example
 ```
 
-Install the Sails and Mast dependencies:
+Install Sails (uses package.json):
 
 ```
-npm install sails rigging
+npm install
 ```
 
 Finally, copy and rename the example config.ex.js file:
