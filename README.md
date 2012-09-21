@@ -20,7 +20,7 @@ cp config.js.ex config.js
 ```
 
 And customize it accordingly for your datasource:
-(see Sequelize's documentation for more information on the options available to you)
+(see Sequelize's documentation for more information on the options available to you.  At the time of this writing, Sequelize support mySQL, SQLite, and Postgres)
 
 ```
 exports.datasource = {
