@@ -1,9 +1,0 @@
-{
-    "name": "olympus",
-    "version": "12.09.21",
-    "dependencies": {
-        "sails": ">=12.09.10",
-	"rigging": ">=12.09.21",
-        "restler": "2.0.1"
-    }
-}

@@ -1,8 +1,9 @@
 {
-    "name": "sails-example",
-    "version": "12.09.22",
+    "name": "olympus",
+    "version": "12.09.21",
     "dependencies": {
         "sails": ">=12.09.10",
-	"rigging": ">=12.08.20"
+	"rigging": ">=12.09.21",
+        "restler": "2.0.1"
     }
 }
