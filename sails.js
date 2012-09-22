@@ -2,6 +2,12 @@
 require('sails').lift({
 	appName: "Sails Example",
 
+	bootstrap: function() {
+	    Role.findOrCreate({name: 'admin'},['name'],function(err,r) {
+		    console.log("DB bootstrap complete.");
+		});
+	},
+
 	appPath: __dirname,
 
 	    port: 5009,
