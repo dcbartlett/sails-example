@@ -1,6 +1,6 @@
 // Define a reusable dropdown component
 // Parent can listen to the "submit" event"
-Mast.components.DropdownComponent = Mast.Component.extend({
+Mast.registerComponent('DropdownComponent',{
 	template: '.dropdown',
 	model: {
 		value: ""

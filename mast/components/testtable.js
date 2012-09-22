@@ -10,8 +10,9 @@ Mast.components.TestRow = Mast.Component.extend({
 	bindings: {
 		title: function (newAttrValue) {
 			var $e = this.$el;
-			$e.fadeTo(150,0.001,function(){
-				$e.children('span').text(newAttrValue);
+			$e = $e.children('span');
+			$e.fadeTo(50,0.001,function(){
+				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
 		}
@@ -66,7 +67,6 @@ Mast.components.TestRow = Mast.Component.extend({
 //			}
 		});
 		self.save();
-//		this.pattern.model.save(null,{silent:true});
 	}
 });
 
