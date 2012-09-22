@@ -1,127 +1,90 @@
 var ExperimentController = {
 	
 	index: function (req,res) {
-		console.log("INDEX");
-		if (req.xhr) {
-			return this.findAll();
+		if (req.xhr || req.isSocket) {
+			this.findAll();
 		}
 		else {
-			console.log(req.params.id);
 			res.view();
 		}
 	},
-	
 	
 	// Lookup a single model
 	find: function (req,res) {
 		Experiment.find({
 			where:{
 				id: req.param('id')
-				}
-			}).success(function(experiments) {
-		res.json(experiments);
-	});
-},
+			}
+		}).success(function(experiments) {
+			res.json(experiments);
+		});
+	},
 	
-// Fetch paginated list of models from testtable
-findAll: function (req,res) {
-	Experiment.fetch(null,function(experiments) {
-		res.json(experiments);
-	});
+	// Fetch paginated list of models from testtable
+	findAll: function (req,res) {
+		Experiment.fetch(null,function(experiments) {
+			res.json(experiments);
+		});
 		
-	// Join room
-	if (req.socket) {
-		req.socket.join('tableViewers');
-	}
-},
+		// Join room
+		req.isSocket && req.socket.join('tableViewers');
+	},
 	
-// Store a new model
-create: function (req,res) {
-	Experiment.create({
-		title: req.param('title'),
-		value: req.param('value')
-	}).success(function(experiment) {
-		req.socket.broadcast.to('tableViewers').json.send({
-			model: 'TestRows',
-			method: '$create',
-			attributes: {
-				id: experiment.id,
-				highlighted: experiment.highlighted,
-				title: experiment.title,
-				value: experiment.value
-			}
-		})
-					
-		res.json({
-			id: experiment.id,
-			success:true
-		});
-	});
-},
-	
-// Edit an existing model
-update: function (req,res) {
-	Experiment.find({
-		where:{
-			id: req.param('id')
-			}
+	// Store a new model
+	create: function (req,res) {
+		Experiment.create({
+			title: req.param('title'),
+			value: req.param('value')
 		}).success(function(experiment) {
-	if (!experiment) {
-		res.json({
-			success:false
+			req.socket.broadcast.to('tableViewers').json.send({
+				uri: 'experiment/create',
+				data: {
+					id: experiment.id,
+					highlighted: experiment.highlighted,
+					title: experiment.title,
+					value: experiment.value
+				}
+			})
+			res.json({
+				id: experiment.id,
+				success:true
+			});
 		});
-	}
-	else {
-		experiment.updateAttributes({
+	},
+	
+	// Edit an existing model
+	update: function (req,res) {
+		Experiment.findAndUpdate({
+			id: req.param('id') 
+		}, {
 			title: req.param('title'),
 			value: req.param('value'),
 			highlighted: req.param('highlighted')
-		}).success(function(outcome){
-
+		},function (err,model) {
 			req.socket.broadcast.to('tableViewers').json.send({
-				model: 'TestRows',
-				method: '$update',
-				attributes: {
-					id: req.param('id'),
+				uri: 'experiment/'+req.param('id')+'/update',
+				data: {
 					highlighted: req.param('highlighted'),
 					title: req.param('title'),
 					value: req.param('value')
 				}
-			})
-
+			});
+			res.json({
+				success:true
+			});
+		});
+	},
+	
+	// Destroy a model
+	destroy: function (req,res) {
+		Experiment.findAndDelete(req.param('id'),function(err) {
+			req.socket.broadcast.to('tableViewers').json.send({
+				uri: 'experiment/'+req.param('id')+'/destroy'
+			});
 			res.json({
 				success:true
 			});
 		});
 	}
-});
-},
-	
-destroy: function (req,res) {
-	var id = req.param('id');
-		
-	Experiment.find(id).success(function(experiment) {
-		experiment.destroy().success(function(outcome){
-			req.socket.broadcast.to('tableViewers').json.send({
-				model: 'TestRows',
-				method: '$destroy',
-				attributes: {
-					id: req.param('id')
-				}
-			})
-			res.json({
-				success:true
-			});
-		});
-	});
-},
-	
-	
-testjson: function (req,res) {
-	res.json({
-		stuff: "there it is!",
-		things: "and more things"
-	});
-}
 };
 _.extend(exports,ExperimentController);

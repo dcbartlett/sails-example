@@ -54,6 +54,7 @@ Mast.components.TestRow = Mast.Component.extend({
 	updateRow: function(value) {
 		var self = this;
 		this.set('title',value, {
+			// Example usage of a custom render function
 //			render: function ($current, $new) {
 //				$current.fadeTo(350,0.001,function(){
 //					$current.replaceWith($new);
@@ -71,23 +72,31 @@ Mast.components.TestRow = Mast.Component.extend({
 
 
 
-
-
-
-
-Mast.components.TestTable = Mast.Table.extend({
+Mast.registerTree('TestTable',{
 	events: {
 		'click .deselectAll': 'deselectAll',
 		'click .addRow': 'addRow'
+	},
+	
+	subscriptions: {
+		'experiment/create' : function (attributes) {
+			this.collection.add(attributes);
+		},
+		'experiment/:id/update' : function (id,attributes) {
+			this.collection.get(id).set(attributes);
+		},
+		'experiment/:id/destroy' : function (id) {
+			this.collection.remove(id);
+		}
 	},
 				
 	outlet: '.sandbox',
 	
 	template: '#mast-template-testtable',
 	
-	rowcomponent: "TestRow",
+	branchComponent: "TestRow",
 	
-	rowoutlet: '.row-outlet',
+	branchOutlet: '.row-outlet',
 	
 	collection: "TestRows",
 	
@@ -111,10 +120,9 @@ Mast.components.TestTable = Mast.Table.extend({
 		});
 	},
 	
+	// Create a random new row
 	addRow: function(e) {
-		// Create a random new row
-		var a = this.collection.create();
-		
+		this.collection.create();
 	},
 	
 	deselectAll: function(e) {
@@ -126,23 +134,18 @@ Mast.components.TestTable = Mast.Table.extend({
 });
 
 
-
-
-
-Mast.components.TestTableWithSubcomponents = Mast.components.TestTable.extend({
-	rowcomponent: 'TestRowWithSubcomponent'
+Mast.registerTree('TestTableWithSubcomponents',{
+	extendsFrom: 'TestTable',
+	branchComponent: 'TestRowWithSubcomponent'
 });
 
-Mast.components.TestRowWithSubcomponent = Mast.components.TestRow.extend({
+Mast.registerComponent('TestRowWithSubcomponent',{
+	extendsFrom: 'TestRow',
+	
 	init: function () {
-		
 		this.set('allowEdit',true);
 	},
 	subcomponents: {
-		dropdown: {
-			component: "DropdownComponent",
-			outlet: ".doUpdate",
-			value: 'test'
-		}
+		DropdownComponent: '.doUpdate'
 	}
 });

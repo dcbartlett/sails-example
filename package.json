@@ -1,5 +1,5 @@
 {
-    "name": "olympus",
+    "name": "sails example",
     "version": "12.09.21",
     "dependencies": {
         "sails": ">=12.09.10",

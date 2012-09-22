@@ -10,21 +10,25 @@ Mast.components.ComponentA = Mast.Component.extend({
 	},
 
 	// Subcomponents to register
+//	subcomponents: {
+//		menu1:{
+//			component: "DropdownComponent",
+//			outlet: ".ddown",
+//			beforeOpenMenu: function () {
+//				this.set('value',this.parent.get('name'));
+//			}
+//		},
+//		menu2:{
+//			component: "DropdownComponent",
+//			outlet: ".ddown",
+//			beforeOpenMenu: function () {
+//				this.set('value',this.parent.get('name'));
+//			}
+//		}
+//	},
+	
 	subcomponents: {
-		menu1:{
-			component: "DropdownComponent",
-			outlet: ".ddown",
-			beforeOpenMenu: function () {
-				this.set('value',this.parent.get('name'));
-			}
-		},
-		menu2:{
-			component: "DropdownComponent",
-			outlet: ".ddown",
-			beforeOpenMenu: function () {
-				this.set('value',this.parent.get('name'));
-			}
-		}
+		DropdownComponent: '.ddown'
 	},
 
 	template: '.test',

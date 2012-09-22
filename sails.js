@@ -4,6 +4,8 @@ require('sails').lift({
 
 	appPath: __dirname,
 
+	    port: 5009,
+
 	appEnvironment: 'development',
 
 	datasource: require("./config").datasource,

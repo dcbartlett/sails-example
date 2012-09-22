@@ -1,15 +1,19 @@
 Mast.components.ComponentB = Mast.Component.extend({
 
 	// Subcomponents to register
-	subcomponents: [
-		{
-			component: "DropdownComponent",
-			outlet: ".ddown",
-			beforeOpenMenu: function () {
-				this.set('value',this.parent.get('name'));
-			}
-		}
-	],
+//	subcomponents: [
+//		{
+//			component: "DropdownComponent",
+//			outlet: ".ddown",
+//			beforeOpenMenu: function () {
+//				this.set('value',this.parent.get('name'));
+//			}
+//		}
+//	],
+
+	subcomponents: {
+		DropdownComponent: '.ddown'
+	},
 	
 	init: function () {
 		this.on('dropdownSubmit',this.changeName);
