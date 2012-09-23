@@ -11,24 +11,23 @@ Mast.components.TestRow = Mast.Component.extend({
 		title: function (newAttrValue) {
 			var $e = this.$el;
 			$e = $e.children('span');
-			$e.fadeTo(500,0.001,function(){
-				console.log($e,"executing title BINDING",newAttrValue);
+			$e.fadeTo(50,0.001,function(){
 				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
 		},
-		votes: function (newVal) {
+		votes: function () {
 			this.model.collection.sort();
-		},
-		updatedAt: function(){}
+		}
 	},
 	
-	afterRender: function () {
-		console.log("AFTERENDER: branch");
-		this.$el.disableSelection();
-		
-		// Listen for child events
+	// Listen for child events
+	init: function() {
 		this.on('dropdownSubmit',this.updateRow);
+	},
+	
+	afterRender: function (changes) {
+		this.$el.disableSelection();
 	},
 	
 	selectRow: function(e) {
@@ -46,7 +45,6 @@ Mast.components.TestRow = Mast.Component.extend({
 	},
 	
 	updateRow: function(value) {
-		this.off('dropdownSubmit',this.updateRow);
 		this.set('title',value);
 		this.save();
 	}
@@ -85,10 +83,6 @@ Mast.registerTree('TestTable',{
 	
 	model: {
 		selected: null
-	},
-	
-	afterRender: function() {
-		console.log("tree afterrender")
 	},
 	
 	// Called only after the socket is live
@@ -133,6 +127,7 @@ Mast.registerTree('TestTableWithSubcomponents',{
 			return -model.get('votes');
 		},
 		model: Mast.Model.extend({
+			urlRoot: '/experiment',
 			defaults: {
 				votes: 0,
 				highlighted: false,
