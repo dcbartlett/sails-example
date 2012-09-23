@@ -36,7 +36,7 @@ Mast.registerTree('LeaderBoard',{
 		});
 	},
 	
-	// Add 5 votes to the total for the selected item
+	// Add a vote to the total for the selected item
 	addVote: function (){
 		this.get('selected').increment('votes',1);
 		this.get('selected').save();

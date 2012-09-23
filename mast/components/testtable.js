@@ -11,17 +11,20 @@ Mast.components.TestRow = Mast.Component.extend({
 		title: function (newAttrValue) {
 			var $e = this.$el;
 			$e = $e.children('span');
-			$e.fadeTo(50,0.001,function(){
+			$e.fadeTo(500,0.001,function(){
+				console.log($e,"executing title BINDING",newAttrValue);
 				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
-		}
+		},
+		votes: function (newVal) {
+			this.model.collection.sort();
+		},
+		updatedAt: function(){}
 	},
 	
-	changeName: function(formFieldValue) {
-		this.set('name',formFieldValue);
-	},
 	afterRender: function () {
+		console.log("AFTERENDER: branch");
 		this.$el.disableSelection();
 		
 		// Listen for child events
@@ -33,7 +36,6 @@ Mast.components.TestRow = Mast.Component.extend({
 		current && current.set('highlighted',false);
 		this.set('highlighted',true);
 		this.parent.set('selected',this);
-		this.save();
 	},
 	
 	removeRow: function(e) {
@@ -44,6 +46,7 @@ Mast.components.TestRow = Mast.Component.extend({
 	},
 	
 	updateRow: function(value) {
+		this.off('dropdownSubmit',this.updateRow);
 		this.set('title',value);
 		this.save();
 	}
@@ -56,22 +59,21 @@ Mast.registerTree('TestTable',{
 		'click .voteUp': 'voteUp',
 		'click .voteDown': 'voteDown'
 	},
-	
-	subscriptions: {
-		'experiment/create' : function (attributes) {
-			this.collection.add(attributes);
-			this.collection.sort();
-		},
-		'experiment/:id/update' : function (id,attributes) {
-			this.collection.get(id).set(attributes);
-			this.collection.sort();
-		},
-		'experiment/:id/destroy' : function (id) {
-			this.collection.remove(id);
-		}
-	},
 				
 	outlet: '.sandbox',
+	
+	bindings: {
+		selected: function(newVal) {
+			if (newVal) {
+				this.$(".voteUp").show();
+				this.$(".voteDown").show();
+			}
+			else {
+				this.$(".voteUp").hide();
+				this.$(".voteDown").hide();
+			}
+		}
+	},
 	
 	template: '#mast-template-testtable',
 	
@@ -83,6 +85,10 @@ Mast.registerTree('TestTable',{
 	
 	model: {
 		selected: null
+	},
+	
+	afterRender: function() {
+		console.log("tree afterrender")
 	},
 	
 	// Called only after the socket is live
@@ -108,7 +114,6 @@ Mast.registerTree('TestTable',{
 			votes: this.get('selected').get('votes')+1
 		});
 		this.get('selected').save();
-		this.collection.sort();
 	},
 	voteDown: function (e) {
 		e.stopPropagation();
@@ -116,22 +121,32 @@ Mast.registerTree('TestTable',{
 			votes: this.get('selected').get('votes')-1
 		});
 		this.get('selected').save();
-		this.collection.sort();
 	}
 });
 
 
 Mast.registerTree('TestTableWithSubcomponents',{
 	extendsFrom: 'TestTable',
+	collection: Mast.Collection.extend({
+		url: '/experiment',
+		comparator: function(model) {
+			return -model.get('votes');
+		},
+		model: Mast.Model.extend({
+			defaults: {
+				votes: 0,
+				highlighted: false,
+				allowEdit: true,
+				title: 'Sample',
+				value: Math.floor(Math.random()*5000)
+			}
+		})
+	}),
 	branchComponent: 'TestRowWithSubcomponent'
 });
 
 Mast.registerComponent('TestRowWithSubcomponent',{
 	extendsFrom: 'TestRow',
-	
-	init: function () {
-		this.set('allowEdit',true);
-	},
 	subcomponents: {
 		DropdownComponent: '.doUpdate'
 	}

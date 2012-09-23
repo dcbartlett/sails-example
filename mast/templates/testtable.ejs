@@ -5,11 +5,9 @@
 -->
 
 <div class="testtable" id="mast-template-testtable">
-	{% if (selected) { %} 
 	<!-- Only display vote buttons if an item is selected -->
-	<a class="voteDown" style="cursor:pointer;">\/</a>
-	<a class="voteUp" style="cursor:pointer;">/\</a>
-	{% } %}
+	<a class="voteDown" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">\/</a>
+	<a class="voteUp" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">/\</a>
 	<a class="addRow">+ Add row</a>
 	<input type="text" class="searchbox" placeholder="Search"/>
 	<div class="clear"></div>
