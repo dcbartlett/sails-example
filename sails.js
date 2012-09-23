@@ -6,6 +6,21 @@ require('sails').lift({
 	    Role.findOrCreate({name: 'admin'},['name'],function(err,r) {
 		    console.log("DB bootstrap complete.");
 		});
+		
+		// Populate leaderboard data
+		_.each([
+			'Claude Shannon',
+			'Carl Friedrich Gauss',
+			'Marie Curie',
+			'Ada Lovelace',
+			'Grace Hopper',
+			'Nikola Tesla'
+		],function(title,index) {
+			Leader.findOrCreate({
+				title: title,
+				votes: 0
+			},['title'],function(){});
+		});
 	},
 
 	appPath: __dirname,

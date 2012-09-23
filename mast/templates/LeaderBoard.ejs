@@ -1,0 +1,8 @@
+<div class="template-leaderboard">
+  {% if (selected) { %}<a class="add-points">Add points</a>{% } %}
+  <div class="item-outlet"></div>
+</div>
+<div class="template-leaderboard-item {% if (highlight) { %} highlight {% } %}">
+  <h3>{{- title }}</h3>
+  <span class="votes">{{- votes }}</span>
+</div>

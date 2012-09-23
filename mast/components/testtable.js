@@ -50,7 +50,6 @@ Mast.components.TestRow = Mast.Component.extend({
 });
 
 
-
 Mast.registerTree('TestTable',{
 	events: {
 		'click .addRow': 'addRow',
