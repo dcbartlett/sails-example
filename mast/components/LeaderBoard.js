@@ -40,7 +40,6 @@ Mast.registerTree('LeaderBoard',{
 	addVote: function (){
 		this.get('selected').increment('votes',1);
 		this.get('selected').save();
-		this.collection.sort();
 	},
 	
 	// Select the specified item
@@ -62,6 +61,12 @@ Mast.registerTree('LeaderBoard',{
 // This component represents a single row of the leaderboard
 Mast.registerComponent('LeaderBoardItem',{
 	template  : '.template-leaderboard-item',   // Identify an HTML template to represent each leaderboard item
+	bindings: {
+		updatedAt: function(){},
+		votes: function () {
+			this.model.collection.sort();
+		}
+	},
 	events : { 
 		click: function (e) {
 			e.stopPropagation();
