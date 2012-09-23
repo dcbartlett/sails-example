@@ -15,35 +15,57 @@ Mast.registerCollection('Leaders',{
 Mast.registerTree('LeaderBoard',{
 	template        : '.template-leaderboard',  // Identify an HTML template to represent the leaderboard frame
 	model			: Mast.Model.extend({
-		selected: null
+		defaults: {
+			selected: null
+		}
 	}),
 	collection      : 'Leaders',				// Associate a collection with the leaderboard
 	branchComponent : 'LeaderBoardItem',        // An instance of branchComponent will be created for each item in the collection
 	branchOutlet    : '.item-outlet',           // A CSS selector, automatically scoped within the component, to identify where new branches should be appended
 	events: {
-		'click a.add-points' : 'add5Points'     // Add 5 points to the selected Leader
+		clickoutside		 : 'deselect',		// Deselect the selected Leader when the user clicks outside of the LeaderBoard
+		'click a.add-points' : 'add5Points'     // Add a vote to the selected Leader
 	},
+	
+	// Fetch the collection from the server on initialization
 	init: function(){
-		this.collection.fetch({data:{
-			limit: 15
-		}});
+		this.collection.fetch({
+			data:{
+				limit: 15
+			}
+		});
 	},
-	add5Points: function (){
-		this.get('selected').increment('votes',5);
+	
+	// Add 5 votes to the total for the selected item
+	addVote: function (){
+		this.get('selected').increment('votes',1);
 		this.get('selected').save();
 		this.collection.sort();
+	},
+	
+	// Select the specified item
+	select: function (item) {
+		this.deselect();
+		this.set('selected',item);
+		item.set('highlight',true);
+	},
+	
+	// Deselect the currently selected row
+	deselect: function () {
+		if (this.get('selected')) {
+			this.get('selected').set('highlight',false);
+		}
+		this.set('selected',null);
 	}
 });
 
 // This component represents a single row of the leaderboard
 Mast.registerComponent('LeaderBoardItem',{
 	template  : '.template-leaderboard-item',   // Identify an HTML template to represent each leaderboard item
-	events    : {
-		click : 'select'
-	},
-	select: function () {                     // When an item is clicked on, mark it as selected
-		this.parent.get('selected') && this.parent.get('selected').set('highlight',false);
-		this.set('highlight',true);
-		this.parent.set('selected',this);
+	events : { 
+		click: function (e) {
+			e.stopPropagation();
+			this.parent.select(this);
+		}
 	}
 });

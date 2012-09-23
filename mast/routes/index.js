@@ -3,7 +3,9 @@ Mast.routes.index = function(query,page) {
 	// Empty container
 	$(".sandbox").empty();
 				
-	new Mast.components.LeaderBoard({outlet:'.sandbox'});
+	leaderBoard = new Mast.components.LeaderBoard({
+		outlet:'.sandbox'
+	});
 
 //	// Create some components
 //	a=new Mast.components.ComponentA;	
