@@ -1,11 +1,11 @@
 // This Collection is synced with the server
 Mast.registerCollection('Leaders',{
 	url		: '/leader',
-	model	: {
+	model	: Mast.Model.extend({
 		defaults: {				// Fields specified exclusively on the client are not shared
 			highlight: false
 		}
-	},
+	}),
 	comparator: function(model) {
 		return -model.get('votes');
 	}
@@ -14,9 +14,9 @@ Mast.registerCollection('Leaders',{
 // This Tree brings life to the leaderboard and its items
 Mast.registerTree('LeaderBoard',{
 	template        : '.template-leaderboard',  // Identify an HTML template to represent the leaderboard frame
-	model			: {
+	model			: Mast.Model.extend({
 		selected: null
-	},
+	}),
 	collection      : 'Leaders',				// Associate a collection with the leaderboard
 	branchComponent : 'LeaderBoardItem',        // An instance of branchComponent will be created for each item in the collection
 	branchOutlet    : '.item-outlet',           // A CSS selector, automatically scoped within the component, to identify where new branches should be appended
