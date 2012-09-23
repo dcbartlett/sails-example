@@ -3,7 +3,7 @@ Mast.components.TestRow = Mast.Component.extend({
 	
 	events: {
 		'click .doDelete': 'removeRow',
-		'click': 'toggleRow'
+		'click': 'selectRow'
 	},
 	
 	// Custom render bindings
@@ -18,10 +18,6 @@ Mast.components.TestRow = Mast.Component.extend({
 		}
 	},
 	
-	// Called after initialization, before autorender
-	init: function () {
-	},
-	
 	changeName: function(formFieldValue) {
 		this.set('name',formFieldValue);
 	},
@@ -32,41 +28,24 @@ Mast.components.TestRow = Mast.Component.extend({
 		this.on('dropdownSubmit',this.updateRow);
 	},
 	
-	toggleRow: function(e) {
-		var rowModel = this.model;
-		if (rowModel.get('highlighted')) {
-			this.set('highlighted',false);
-			this.save();
-		}
-		else {
-			this.set('highlighted',true);
-			this.save();
-		}
+	selectRow: function(e) {
+		var current = this.parent.get('selected');
+		current && current.set('highlighted',false);
+		this.set('highlighted',true);
+		this.parent.set('selected',this);
+		this.save();
 	},
 	
 	removeRow: function(e) {
 		var rowModel = this.model;
-		//		debug.debug("Deleting row w/ id: "+rowModel.id+" @ index: "+rowId);
 		this.parent.collection.remove(rowModel);
 		rowModel.destroy();
-		e.stopImmediatePropagation();
+		e.stopPropagation();
 	},
 	
 	updateRow: function(value) {
-		var self = this;
-		this.set('title',value, {
-			// Example usage of a custom render function
-//			render: function ($current, $new) {
-//				$current.fadeTo(350,0.001,function(){
-//					$current.replaceWith($new);
-//					$new.hide();
-//					self.setElement($new);
-//					self.renderSubcomponents();
-//					$new.fadeIn(150);
-//				});
-//			}
-		});
-		self.save();
+		this.set('title',value);
+		this.save();
 	}
 });
 
@@ -74,16 +53,19 @@ Mast.components.TestRow = Mast.Component.extend({
 
 Mast.registerTree('TestTable',{
 	events: {
-		'click .deselectAll': 'deselectAll',
-		'click .addRow': 'addRow'
+		'click .addRow': 'addRow',
+		'click .voteUp': 'voteUp',
+		'click .voteDown': 'voteDown'
 	},
 	
 	subscriptions: {
 		'experiment/create' : function (attributes) {
 			this.collection.add(attributes);
+			this.collection.sort();
 		},
 		'experiment/:id/update' : function (id,attributes) {
 			this.collection.get(id).set(attributes);
+			this.collection.sort();
 		},
 		'experiment/:id/destroy' : function (id) {
 			this.collection.remove(id);
@@ -100,18 +82,14 @@ Mast.registerTree('TestTable',{
 	
 	collection: "TestRows",
 	
-	model: Mast.Model.extend({
-		defaults: {
-			testtitle:'works?'
-		}
-	}),
+	model: {
+		selected: null
+	},
 	
 	// Called only after the socket is live
 	afterConnect: function() {
 		// Only fire afterConnect once, even if a reconnect happens
 		Mast.Socket.off('connect', this.afterConnect);
-		
-		var self = this;
 		
 		this.collection.fetch({
 			error: function(stuff){
@@ -125,11 +103,21 @@ Mast.registerTree('TestTable',{
 		this.collection.create();
 	},
 	
-	deselectAll: function(e) {
-		this.collection.each(function(model){
-			model.set('highlighted',false);
-			model.save();
+	voteUp: function (e) {
+		e.stopPropagation();
+		this.get('selected').set({
+			votes: this.get('selected').get('votes')+1
 		});
+		this.get('selected').save();
+		this.collection.sort();
+	},
+	voteDown: function (e) {
+		e.stopPropagation();
+		this.get('selected').set({
+			votes: this.get('selected').get('votes')-1
+		});
+		this.get('selected').save();
+		this.collection.sort();
 	}
 });
 

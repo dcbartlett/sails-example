@@ -3,6 +3,7 @@ Mast.models.TestRow = Mast.Model.extend({
 	
 	urlRoot: '/experiment',
 	defaults: {
+		votes: 0,
 		highlighted: false,
 		allowEdit: false,
 		title: 'Sample',
@@ -14,5 +15,8 @@ Mast.models.TestRow = Mast.Model.extend({
 Mast.models.TestRows = Mast.Collection.extend({
 	_class: 'TestRows',
 	url: '/experiment',
+	comparator: function(model) {
+		return -model.get('votes');
+	},
 	model: Mast.models.TestRow
 });
