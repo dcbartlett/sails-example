@@ -62,7 +62,6 @@ Mast.registerTree('LeaderBoard',{
 Mast.registerComponent('LeaderBoardItem',{
 	template  : '.template-leaderboard-item',   // Identify an HTML template to represent each leaderboard item
 	bindings: {
-		updatedAt: function(){},
 		votes: function () {
 			this.model.collection.sort();
 		}
