@@ -24,7 +24,7 @@ Mast.registerTree('LeaderBoard',{
 	branchOutlet    : '.item-outlet',           // A CSS selector, automatically scoped within the component, to identify where new branches should be appended
 	events: {
 		clickoutside		 : 'deselect',		// Deselect the selected Leader when the user clicks outside of the LeaderBoard
-		'click a.add-points' : 'add5Points'     // Add a vote to the selected Leader
+		'click a.add-points' : 'addVote'     // Add a vote to the selected Leader
 	},
 	
 	// Fetch the collection from the server on initialization
