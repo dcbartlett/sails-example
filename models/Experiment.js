@@ -23,8 +23,5 @@ Experiment = Model.extend({
 				}
 			})
 		}
-	},
-	instanceMethods: {
-		
 	}
 });
