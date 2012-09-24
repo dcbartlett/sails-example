@@ -121,22 +121,22 @@ Mast.registerTree('TestTable',{
 
 Mast.registerTree('TestTableWithSubcomponents',{
 	extendsFrom: 'TestTable',
-	collection: Mast.Collection.extend({
-		url: '/experiment',
-		comparator: function(model) {
-			return -model.get('votes');
-		},
-		model: Mast.Model.extend({
-			urlRoot: '/experiment',
-			defaults: {
-				votes: 0,
-				highlighted: false,
-				allowEdit: true,
-				title: 'Sample',
-				value: Math.floor(Math.random()*5000)
-			}
-		})
-	}),
+//	collection: Mast.Collection.extend({
+//		url: '/experiment',
+//		comparator: function(model) {
+//			return -model.get('votes');
+//		},
+//		model: Mast.Model.extend({
+//			urlRoot: '/experiment',
+//			defaults: {
+//				votes: 0,
+//				highlighted: false,
+//				allowEdit: true,
+//				title: 'Sample',
+//				value: Math.floor(Math.random()*5000)
+//			}
+//		})
+//	}),
 	branchComponent: 'TestRowWithSubcomponent'
 });
 

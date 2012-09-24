@@ -11,7 +11,7 @@
 	margin-top: 1em;
 }
 
-.testtable a {
+.testtable .button, .testtable .dropdown {
 	background:#a33;
 	border: 1px inset #b55;
 	border-bottom: 3px inset #633;
@@ -22,7 +22,10 @@
 	font-weight:bold;
 	color:white;
 	cursor:pointer;
+	padding: 0.3em 0.5em 0.3em 0.5em;
 }
+
+
 
 .testtable .voteUp {
 	

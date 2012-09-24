@@ -6,9 +6,9 @@
 
 <div class="testtable" id="mast-template-testtable">
 	<!-- Only display vote buttons if an item is selected -->
-	<a class="voteDown" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">\/</a>
-	<a class="voteUp" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">/\</a>
-	<a class="addRow">+ Add row</a>
+	<a class="button voteDown" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">\/</a>
+	<a class="button voteUp" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">/\</a>
+	<a class="button addRow">+ Add row</a>
 	<input type="text" class="searchbox" placeholder="Search"/>
 	<div class="clear"></div>
 	<ul class="row-outlet"></ul>
@@ -22,7 +22,7 @@
 
 <li class="row {% if (highlighted) { %} highlighted {% } %}" id="mast-template-testtable-row">
 	<span>{{-title}} </span>
-	<a class="doDelete" style="cursor:pointer;">x</a>
-	<a class="votes">{{- votes}}</a>
-	{% if (allowEdit) { %}<a class="doUpdate" style="cursor:pointer;"></a> {% } %}
+	<a class="button doDelete" style="cursor:pointer;">x</a>
+	<a class="button votes">{{- votes}}</a>
+	<a class="doUpdate" style="cursor:pointer;"></a>
 </li>
