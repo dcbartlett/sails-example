@@ -11,10 +11,12 @@ Mast.registerTree('TestTable',{
 	outlet: '.sandbox',
 	
 	subscriptions: {
-		// Deselect the row when it is destroyed
 		'experiment/:id/destroy': function (id) {
 			this.collection.remove(id);
-			this.set('selected',null);
+			// If this destroyed row is selected, deselect it
+			if (this.get('selected') && this.get('selected').get('id')==id) {
+				this.set('selected',null);
+			}
 		}
 	},
 	
