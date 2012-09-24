@@ -27,15 +27,6 @@ Mast.registerTree('LeaderBoard',{
 		'click a.add-points' : 'addVote'     // Add a vote to the selected Leader
 	},
 	
-	// Fetch the collection from the server on initialization
-	init: function(){
-		this.collection.fetch({
-			data:{
-				limit: 15
-			}
-		});
-	},
-	
 	// Add a vote to the total for the selected item
 	addVote: function (){
 		this.get('selected').increment('votes',1);
