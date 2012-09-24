@@ -1,56 +1,6 @@
-Mast.components.TestRow = Mast.Component.extend({
-	template: '#mast-template-testtable-row',
-	
-	events: {
-		'click .doDelete': 'removeRow',
-		'click': 'selectRow'
-	},
-	
-	// Custom render bindings
-	bindings: {
-		title: function (newAttrValue) {
-			var $e = this.$el;
-			$e = $e.children('span');
-			$e.fadeTo(50,0.001,function(){
-				$e.text(newAttrValue);
-				$e.fadeTo(150,1);
-			});
-		},
-		votes: function () {
-			this.model.collection.sort();
-		}
-	},
-	
-	// Listen for child events
-	init: function() {
-		this.on('dropdownSubmit',this.updateRow);
-	},
-	
-	afterRender: function (changes) {
-		this.$el.disableSelection();
-	},
-	
-	selectRow: function(e) {
-		var current = this.parent.get('selected');
-		current && current.set('highlighted',false);
-		this.set('highlighted',true);
-		this.parent.set('selected',this);
-	},
-	
-	removeRow: function(e) {
-		var rowModel = this.model;
-		this.parent.collection.remove(rowModel);
-		rowModel.destroy();
-		e.stopPropagation();
-	},
-	
-	updateRow: function(value) {
-		this.set('title',value);
-		this.save();
-	}
-});
-
-
+/**
+ * A Table of Experiment models
+ */
 Mast.registerTree('TestTable',{
 	events: {
 		'click .addRow': 'addRow',
@@ -79,7 +29,7 @@ Mast.registerTree('TestTable',{
 	
 	branchOutlet: '.row-outlet',
 	
-	collection: "TestRows",
+	collection: "Experiments",
 	
 	model: {
 		selected: null
@@ -118,15 +68,58 @@ Mast.registerTree('TestTable',{
 	}
 });
 
-
-Mast.registerTree('TestTableWithSubcomponents',{
-	extendsFrom: 'TestTable',
-	branchComponent: 'TestRowWithSubcomponent'
-});
-
-Mast.registerComponent('TestRowWithSubcomponent',{
-	extendsFrom: 'TestRow',
-	subcomponents: {
-		DropdownComponent: '.doUpdate'
+/**
+ * This component represents a row in TestTable
+ */
+Mast.registerComponent('TestRow',{
+	template: '#mast-template-testtable-row',
+	
+	events: {
+		'click .doDelete': 'removeRow',
+		'click': 'selectRow'
+	},
+	
+	bindings: {
+		// Called when title is changed
+		title: function (newAttrValue) {
+			var $e = this.$el;
+			$e = $e.children('span');
+			$e.fadeTo(50,0.001,function(){
+				$e.text(newAttrValue);
+				$e.fadeTo(150,1);
+			});
+		},
+		// Called when votes are changed
+		votes: function () {
+			this.model.collection.sort();
+		}
+	},
+	
+	// Listen for child events
+	init: function() {
+		this.on('dropdownSubmit',this.updateRow);
+	},
+	
+	afterRender: function (changes) {
+		this.$el.disableSelection();
+	},
+	
+	selectRow: function(e) {
+		var current = this.parent.get('selected');
+		current && current.set('highlighted',false);
+		this.set('highlighted',true);
+		this.parent.set('selected',this);
+	},
+	
+	removeRow: function(e) {
+		var rowModel = this.model;
+		this.parent.collection.remove(rowModel);
+		rowModel.destroy();
+		e.stopPropagation();
+	},
+	
+	updateRow: function(value) {
+		this.set('title',value);
+		this.save();
 	}
 });
