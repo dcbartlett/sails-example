@@ -35,18 +35,6 @@ Mast.registerTree('TestTable',{
 		selected: null
 	},
 	
-	// Called only after the socket is live
-	afterConnect: function() {
-		// Only fire afterConnect once, even if a reconnect happens
-		Mast.Socket.off('connect', this.afterConnect);
-		
-		this.collection.fetch({
-			error: function(stuff){
-				throw new Error(stuff);
-			}
-		});
-	},
-	
 	// Create a random new row
 	addRow: function(e) {
 		this.collection.create();
@@ -95,7 +83,7 @@ Mast.registerComponent('TestRow',{
 		}
 	},
 	
-	// Listen for child events
+	// Listen for when the dropdown form is submitted
 	init: function() {
 		this.on('dropdownSubmit',this.updateRow);
 	},
