@@ -1,8 +1,0 @@
-{
-    "name": "sails-example",
-    "version": "12.09.22",
-    "dependencies": {
-        "sails": ">=12.09.10",
-	"rigging": ">=12.08.20"
-    }
-}
