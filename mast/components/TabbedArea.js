@@ -31,3 +31,4 @@ Mast.registerComponent('TabbedArea',{
 		this.set('selected','dogs');
 	}
 });
+

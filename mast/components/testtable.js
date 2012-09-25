@@ -5,21 +5,36 @@ Mast.registerTree('TestTable',{
 				
 	outlet: '.sandbox',
 	
-	subscriptions: {
-		'experiment/:id/destroy': function (id) {
-			this.collection.remove(id);
-			// If this destroyed row is selected, deselect it
-			if (this.get('selected') && this.get('selected').get('id')==id) {
+	// If a destroyed row is selected, deselect it
+	init: function(){
+		this.collection.on('remove',_.bind(function(removedModel){
+			if (this.get('selected') && this.get('selected').get('id')==removedModel.get('id')) {
 				this.set('selected',null);
 			}
+		},this));
+	},
+	
+	subscriptions: {
+		// Receiving this event means the model was already destroyed on the server
+		'experiment/:id/destroy': function (id) {
+			this.collection.remove(id);
+		},
+		
+		'experiment/create': function(atrs) {
+			this.collection.add(atrs);
+			this.collection.sort();
 		}
 	},
 	
 	bindings: {
-		selected: function(newVal) {
-			if (newVal) {
+		selected: function(selectedComponent) {
+			if (selectedComponent) {
 				this.$(".voteUp").show();
 				this.$(".voteDown").show();
+				
+				// Unhighlight the rest and highlight the proper row
+				this.collection.invoke('set','highlighted',false);
+				selectedComponent.set('highlighted',true);
 			}
 			else {
 				this.$(".voteUp").hide();
@@ -52,20 +67,18 @@ Mast.registerTree('TestTable',{
 	// Create a random new row
 	addRow: function(e) {
 		this.collection.create();
+		this.collection.sort();
 	},
 	
 	voteUp: function (e) {
 		e.stopPropagation();
-		this.get('selected').set({
-			votes: this.get('selected').get('votes')+1
-		});
+		this.get('selected').increment('votes',1);
 		this.get('selected').save();
 	},
+	
 	voteDown: function (e) {
 		e.stopPropagation();
-		this.get('selected').set({
-			votes: this.get('selected').get('votes')-1
-		});
+		this.get('selected').decrement('votes',1);
 		this.get('selected').save();
 	},
 	
@@ -127,16 +140,11 @@ Mast.registerComponent('TestRow',{
 	},
 	
 	selectRow: function(e) {
-		var current = this.parent.get('selected');
-		current && current.set('highlighted',false);
-		this.set('highlighted',true);
 		this.parent.set('selected',this);
 	},
 	
 	removeRow: function(e) {
-		var rowModel = this.model;
-		this.parent.collection.remove(rowModel);
-		rowModel.destroy();
+		this.model.destroy();
 		e.stopPropagation();
 	},
 	
