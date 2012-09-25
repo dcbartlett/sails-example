@@ -141,7 +141,7 @@ Mast.registerComponent('TestRow',{
 			var $e = this.$el;
 			console.log("BIND");
 			$e = $e.children('span');
-			$e.fadeTo(500,0.001,function(){
+			$e.fadeTo(75,0.001,function(){
 				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
