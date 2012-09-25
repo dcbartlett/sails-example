@@ -5,7 +5,7 @@ Mast.registerTree('TestTableWithSubcomponents',{
 
 Mast.registerComponent('TestRowWithSubcomponent',{
 	extendsFrom: 'TestRow',
-	subcomponents: {
+	regions: {
 		'.doUpdate': 'DropdownComponent'
 	}
 });

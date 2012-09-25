@@ -11,6 +11,11 @@ Mast.routes.subcomponents = function(query,page){
 	tc = new Mast.components.TestTableWithSubcomponents();
 	
 
+	// Make another component to test out attach and detach
+	tabbedarea = new Mast.components.TabbedArea({
+		outlet: ".sandbox"
+	})
+
 	// Finally, let's create another button for the user to go back
 	// to the previous example		
 	new Mast.Button({
