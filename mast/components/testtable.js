@@ -5,13 +5,16 @@ Mast.registerTree('TestTable',{
 				
 	outlet: '.sandbox',
 	
-	// If a destroyed row is selected, deselect it
-	init: function(){
-		this.collection.on('remove',_.bind(function(removedModel){
-			if (this.get('selected') && this.get('selected').get('id')==removedModel.get('id')) {
-				this.set('selected',null);
-			}
-		},this));
+	template: '#mast-template-testtable',
+	
+	branchComponent: "TestRow",
+	
+	branchOutlet: '.row-outlet',
+	
+	collection: "Experiments",
+	
+	model: {
+		selected: null
 	},
 	
 	subscriptions: {
@@ -27,32 +30,20 @@ Mast.registerTree('TestTable',{
 	},
 	
 	bindings: {
-		selected: function(selectedComponent) {
-			if (selectedComponent) {
+		selected: function(selectedModel) {
+			if (selectedModel) {
 				this.$(".voteUp").show();
 				this.$(".voteDown").show();
 				
 				// Unhighlight the rest and highlight the proper row
 				this.collection.invoke('set','highlighted',false);
-				selectedComponent.set('highlighted',true);
+				selectedModel.set('highlighted',true);
 			}
 			else {
 				this.$(".voteUp").hide();
 				this.$(".voteDown").hide();
 			}
 		}
-	},
-	
-	template: '#mast-template-testtable',
-	
-	branchComponent: "TestRow",
-	
-	branchOutlet: '.row-outlet',
-	
-	collection: "Experiments",
-	
-	model: {
-		selected: null
 	},
 	
 	events: {
@@ -64,6 +55,13 @@ Mast.registerTree('TestTable',{
 		},100)
 	},
 	
+	// If a destroyed row is selected, deselect it
+	init: function(){
+		this.collection.on('remove',this.deselectDeletedModel);
+		this.collection.on('reset',this.deselectResetModel);
+	},
+	
+	
 	// Create a random new row
 	addRow: function(e) {
 		this.collection.create();
@@ -73,13 +71,13 @@ Mast.registerTree('TestTable',{
 	voteUp: function (e) {
 		e.stopPropagation();
 		this.get('selected').increment('votes',1);
-		this.get('selected').model.save();
+		this.get('selected').save();
 	},
 	
 	voteDown: function (e) {
 		e.stopPropagation();
 		this.get('selected').decrement('votes',1);
-		this.get('selected').model.save();
+		this.get('selected').save();
 	},
 	
 	
@@ -98,8 +96,31 @@ Mast.registerTree('TestTable',{
 		}
 		else {
 			this.collection.fetch();
+		}	
+	},
+	
+	
+	// Deselect if this row was deleted
+	deselectDeletedModel: function(removedModel){
+		if (this.get('selected') && this.get('selected').get('id')==removedModel.get('id')) {
+			this.set('selected',null);
 		}
-		
+	},
+	
+	// Deselect now-invisble rows after a reset
+	deselectResetModel: function(){
+		if (this.get('selected')) {
+			var currentlySelectedModelId = this.get('selected').get('id');
+			var selectedModels = this.collection.where({
+				id: currentlySelectedModelId
+			});
+			if (selectedModels.length == 0) {
+				this.set('selected',null);
+			}
+			else {
+				this.set('selected',selectedModels[0]);
+			}
+		}
 	}
 });
 
@@ -118,11 +139,13 @@ Mast.registerComponent('TestRow',{
 		// Called when title is changed
 		title: function (newAttrValue) {
 			var $e = this.$el;
+			console.log("BIND");
 			$e = $e.children('span');
-			$e.fadeTo(50,0.001,function(){
+			$e.fadeTo(500,0.001,function(){
 				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
+		
 		},
 		// Called when votes are changed
 		votes: function () {
@@ -140,7 +163,7 @@ Mast.registerComponent('TestRow',{
 	},
 	
 	selectRow: function(e) {
-		this.parent.set('selected',this);
+		this.parent.set('selected',this.model);
 	},
 	
 	removeRow: function(e) {
@@ -149,7 +172,13 @@ Mast.registerComponent('TestRow',{
 	},
 	
 	updateRow: function(value) {
-		this.set('title',value);
-		this.model.save();
+		this.model.set('title',value);
+		this.save();
+		
+		// Remove row if name doesn't match the current search filter
+		var searchFilter = this.parent.$('.searchbox').val();
+		if (searchFilter != "" && !~value.indexOf(searchFilter)) {
+			this.parent.collection.remove(this.model);
+		}
 	}
 });
