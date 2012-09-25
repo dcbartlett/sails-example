@@ -44,7 +44,9 @@ Mast.registerTree('TestTable',{
 		'click .addRow': 'addRow',
 		'click .voteUp': 'voteUp',
 		'click .voteDown': 'voteDown',
-		'keyup .searchbox': 'fetchFilteredResults'
+		'keyup .searchbox': _.debounce(function(){
+			this.fetchFilteredResults();
+		},100)
 	},
 	
 	// Create a random new row
@@ -72,14 +74,14 @@ Mast.registerTree('TestTable',{
 		var searchQuery = this.$('.searchbox').val();
 		
 		if (searchQuery.length > 0) {
-			this.collection.fetch({data: {
+			this.collection.fetch({
 				search: {
 					title: searchQuery
 				},
 				limit: 15,
 				skip: 0,
 				order: 'id ASC'
-			}});
+			});
 		}
 		else {
 			this.collection.fetch();
