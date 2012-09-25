@@ -30,7 +30,7 @@ Mast.registerTree('LeaderBoard',{
 	// Add a vote to the total for the selected item
 	addVote: function (){
 		this.get('selected').increment('votes',1);
-		this.get('selected').save();
+		this.get('selected').model.save();
 	},
 	
 	// Select the specified item

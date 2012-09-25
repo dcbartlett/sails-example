@@ -73,13 +73,13 @@ Mast.registerTree('TestTable',{
 	voteUp: function (e) {
 		e.stopPropagation();
 		this.get('selected').increment('votes',1);
-		this.get('selected').save();
+		this.get('selected').model.save();
 	},
 	
 	voteDown: function (e) {
 		e.stopPropagation();
 		this.get('selected').decrement('votes',1);
-		this.get('selected').save();
+		this.get('selected').model.save();
 	},
 	
 	
@@ -150,6 +150,6 @@ Mast.registerComponent('TestRow',{
 	
 	updateRow: function(value) {
 		this.set('title',value);
-		this.save();
+		this.model.save();
 	}
 });
