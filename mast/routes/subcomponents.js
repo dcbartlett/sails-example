@@ -15,6 +15,10 @@ Mast.routes.subcomponents = function(query,page){
 	tabbedarea = new Mast.components.TabbedArea({
 		outlet: ".sandbox"
 	})
+	
+	tabbedarea2 = new Mast.components.TabbedArea2({
+		outlet: ".sandbox"
+	})
 
 	// Finally, let's create another button for the user to go back
 	// to the previous example		

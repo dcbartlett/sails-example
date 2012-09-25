@@ -1,4 +1,5 @@
 Mast.registerComponent('TabbedArea',{
+	
 	template: '.template-tabbed-area',
 	
 	model: {
