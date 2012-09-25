@@ -2,11 +2,6 @@
  * A Table of Experiment models
  */
 Mast.registerTree('TestTable',{
-	events: {
-		'click .addRow': 'addRow',
-		'click .voteUp': 'voteUp',
-		'click .voteDown': 'voteDown'
-	},
 				
 	outlet: '.sandbox',
 	
@@ -45,6 +40,13 @@ Mast.registerTree('TestTable',{
 		selected: null
 	},
 	
+	events: {
+		'click .addRow': 'addRow',
+		'click .voteUp': 'voteUp',
+		'click .voteDown': 'voteDown',
+		'keyup .searchbox': 'fetchFilteredResults'
+	},
+	
 	// Create a random new row
 	addRow: function(e) {
 		this.collection.create();
@@ -63,6 +65,26 @@ Mast.registerTree('TestTable',{
 			votes: this.get('selected').get('votes')-1
 		});
 		this.get('selected').save();
+	},
+	
+	
+	fetchFilteredResults: function () { 
+		var searchQuery = this.$('.searchbox').val();
+		
+		if (searchQuery.length > 0) {
+			this.collection.fetch({data: {
+				search: {
+					title: searchQuery
+				},
+				limit: 15,
+				skip: 0,
+				order: 'id ASC'
+			}});
+		}
+		else {
+			this.collection.fetch();
+		}
+		
 	}
 });
 
