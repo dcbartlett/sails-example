@@ -1,8 +1,8 @@
 # Back-end
-### Role-based authentication
-![Screen Shot 2012-10-03 at 4.14.43 PM.png](http://i.imgur.com/4edvM.png) 
 ### RESTful routing of WebSocket requests
 ![Screen Shot 2012-10-03 at 4.42.16 PM.png](http://i.imgur.com/z3sdV.png)
+### Role-based authentication (supports sockets as well)
+![Screen Shot 2012-10-03 at 4.14.43 PM.png](http://i.imgur.com/4edvM.png) 
 ### Familiar MVC architecture
 ![Screen Shot 2012-10-03 at 4.15.26 PM.png](http://i.imgur.com/24GSc.png) 
 
