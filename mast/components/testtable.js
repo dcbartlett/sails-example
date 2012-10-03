@@ -30,6 +30,7 @@ Mast.registerTree('TestTable',{
 	},
 	
 	bindings: {
+
 		selected: function(selectedModel) {
 			if (selectedModel) {
 				this.$(".voteUp").show();
@@ -139,7 +140,6 @@ Mast.registerComponent('TestRow',{
 		// Called when title is changed
 		title: function (newAttrValue) {
 			var $e = this.$el;
-			console.log("BIND");
 			$e = $e.children('span');
 			$e.fadeTo(75,0.001,function(){
 				$e.text(newAttrValue);
