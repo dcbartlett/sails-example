@@ -1,3 +1,5 @@
+![Screen Shot 2012-10-03 at 4.06.12 PM.png](http://i.imgur.com/K1cDl.png) 
+
 Installing the app
 --
 
