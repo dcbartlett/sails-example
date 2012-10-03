@@ -1,4 +1,9 @@
+### The "Meteor example":
 ![Screen Shot 2012-10-03 at 4.06.12 PM.png](http://i.imgur.com/K1cDl.png) 
+### Searchable table, with CRUD
+![Screen Shot 2012-10-03 at 4.10.23 PM.png](http://i.imgur.com/Q3E0w.png)
+### Tree structures
+![Screen Shot 2012-10-03 at 4.10.46 PM.png](http://i.imgur.com/BLebW.png) 
 
 Installing the app
 --
