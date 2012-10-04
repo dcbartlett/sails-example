@@ -9,6 +9,8 @@ Mast.routes.treeExample = function(query,page){
 	// Each tree has a Collection
 	testTree = new Mast.components.ExampleTreeComponent();
 	
+	simplerTree = new Mast.components.SimplerTree();
+
 	// Finally, let's create another button for the user to go back
 	// to the previous example		
 	new Mast.Button({
