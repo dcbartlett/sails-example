@@ -17,12 +17,7 @@ Mast.registerTree('TestTable',{
 		selected: null
 	},
 	
-	subscriptions: {
-		// Receiving this event means the model was already destroyed on the server
-		'experiment/:id/destroy': function (id) {
-			this.collection.remove(id);
-		},
-		
+	subscriptions: {		
 		'experiment/create': function(atrs) {
 			this.collection.add(atrs);
 			this.collection.sort();
