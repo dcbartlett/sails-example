@@ -7,7 +7,7 @@ Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 	},
 	outlet: '.sandbox',
 	model: 'ExampleTreeModel',
-	template: '#mast-template-exampleTree',
+	template: '.mast-template-exampleTree',
 	emptyHTML: '<em>There are no children available.</em>',
 	
 	branchOutlet: '.branchOutlet',

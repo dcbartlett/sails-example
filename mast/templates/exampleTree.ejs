@@ -4,7 +4,7 @@
 	IDs are stripped from templates!
 -->
 
-<div class="mast-tree {% if (highlighted) { %} highlighted {% } %}" id="mast-template-exampleTree">
+<div class="mast-template-exampleTree mast-tree {% if (highlighted) { %} highlighted {% } %}">
 	<span>{{-title}} | {{-value}} </span>
 	{% if (allowEdit) { %}<a class="doUpdate" style="cursor:pointer;"></a> {% } %}
 	<a class="doDelete" style="cursor:pointer;">x</a>
