@@ -16,7 +16,7 @@ Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 
 	
 	// Called after initialization, before render
-	init: function () {
+	afterCreate: function () {
 
 	},
 	

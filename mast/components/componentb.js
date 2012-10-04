@@ -15,7 +15,7 @@ Mast.components.ComponentB = Mast.Component.extend({
 		DropdownComponent: '.ddown'
 	},
 	
-	init: function () {
+	afterCreate: function () {
 		this.on('dropdownSubmit',this.changeName);
 	},
 	

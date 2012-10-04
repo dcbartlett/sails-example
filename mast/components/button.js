@@ -2,7 +2,7 @@ Mast.components.Button = Mast.Button = Mast.Component.extend({
 		
 	events: {},
 		
-	init: function() {
+	afterCreate: function() {
 		this.events.click = this.click;
 		this.set('label',this.label);
 	},

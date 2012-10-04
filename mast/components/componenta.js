@@ -1,7 +1,7 @@
 Mast.components.ComponentA = Mast.Component.extend({
 	events: {},
 
-	init: function () {
+	afterCreate: function () {
 		this.on('dropdownSubmit',this.changeName);
 	},
 	
