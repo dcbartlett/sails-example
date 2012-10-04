@@ -17,7 +17,7 @@ Mast.registerComponent('TabbedArea',{
 	subcomponents: {
 		// The cats collection is stored on the server
 		cats: {
-			emptyHTML: 'No cats found in database.',
+			emptyHTML: 'No cats found.',
 			collection: {
 				url: '/cat'
 			},
@@ -27,7 +27,7 @@ Mast.registerComponent('TabbedArea',{
 		},
 		// The dogs collection is explicitly defined on the client
 		dogs: {
-			emptyHTML: 'No dogs found in database.',
+			emptyHTML: 'No dogs found.',
 			collection: [],//[{name: 'Scruffy'}, {name: 'Suki'}],
 			component: {
 				template: '.template-dogs-component'
