@@ -11,6 +11,7 @@ Mast.registerComponent('SimplerTree',{
 	regions: {
 		'.tree-outlet': {
 			collection: {},
+			emptyHTML: '<em>There are no branches available.</em>',
 			component: 'SimplerTree'
 		}
 	},
@@ -29,8 +30,7 @@ Mast.registerComponent('SimplerTree',{
 	},
 	
 	addTree: function (e) {
-		this.children['.tree-outlet'].collection.add({value: this.get('value')+1});
-		console.log("TREECOMPONENT",this.children['.tree-outlet'],"COLLECTION models attrs",_.map(this.children['.tree-outlet'].collection.models,function(m){return m.attributes;}));
+		this.children['.tree-outlet'].collection.add({});
 	}
 });
 
