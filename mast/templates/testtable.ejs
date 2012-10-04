@@ -4,7 +4,7 @@
 	IDs are stripped from templates!
 -->
 
-<div class="testtable" id="mast-template-testtable">
+<div class="testtable mast-template-testtable" >
 	<!-- Only display vote buttons if an item is selected -->
 	<a class="button voteDown" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">\/</a>
 	<a class="button voteUp" style="cursor:pointer; {% if (!selected) { %} display: none; {% } %}">/\</a>
@@ -15,12 +15,12 @@
 </div>
 
 
-<div class="empty" id="mast-template-testtable-empty">
+<div class="empty mast-template-testtable-empty">
 	<span>Nothing to see here...</span>
 </div>
 
 
-<li class="row {% if (highlighted) { %} highlighted {% } %}" id="mast-template-testtable-row">
+<li class="mast-template-testtable-row row {% if (highlighted) { %} highlighted {% } %}">
 	<span>{{-title}} </span>
 	<a class="button doDelete" style="cursor:pointer;">x</a>
 	<a class="button votes">{{- votes}}</a>

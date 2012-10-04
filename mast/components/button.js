@@ -11,7 +11,7 @@ Mast.components.Button = Mast.Button = Mast.Component.extend({
 		this.$el.disableSelection();
 	},
 		
-	template: '#mast-template-button',
+	template: '.mast-template-button',
 		
 	model: {
 		label: 'Press me!'

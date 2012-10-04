@@ -5,7 +5,7 @@ Mast.registerTree('TestTable',{
 				
 	outlet: '.sandbox',
 	
-	template: '#mast-template-testtable',
+	template: '.mast-template-testtable',
 	
 	branchComponent: "TestRow",
 	
@@ -129,7 +129,7 @@ Mast.registerTree('TestTable',{
  * This component represents a row in TestTable
  */
 Mast.registerComponent('TestRow',{
-	template: '#mast-template-testtable-row',
+	template: '.mast-template-testtable-row',
 	
 	events: {
 		'click .doDelete': 'removeRow',
