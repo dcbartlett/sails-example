@@ -115,7 +115,7 @@ Mast.registerTree('TestTable',{
 			var selectedModels = this.collection.where({
 				id: currentlySelectedModelId
 			});
-			if (selectedModels.length == 0) {
+			if (selectedModels.length === 0) {
 				this.set('selected',null);
 			}
 			else {
@@ -145,7 +145,6 @@ Mast.registerComponent('TestRow',{
 				$e.text(newAttrValue);
 				$e.fadeTo(150,1);
 			});
-		
 		},
 		// Called when votes are changed
 		votes: function () {
@@ -177,7 +176,7 @@ Mast.registerComponent('TestRow',{
 		
 		// Remove row if name doesn't match the current search filter
 		var searchFilter = this.parent.$('.searchbox').val();
-		if (searchFilter != "" && !~value.indexOf(searchFilter)) {
+		if (searchFilter !== "" && !~value.indexOf(searchFilter)) {
 			this.parent.collection.remove(this.model);
 		}
 	}

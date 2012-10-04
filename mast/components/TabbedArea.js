@@ -10,7 +10,7 @@ Mast.registerComponent('TabbedArea',{
 		cats: {template: '.template-cats-component'},
 		dogs: {template: '.template-dogs-component'}
 	},
-	
+
 	afterRender: function () {
 		var selection = this.get('selected'),
 			tabEl = this.$("."+selection+".tab");

@@ -15,8 +15,10 @@ Mast.components.ExampleTreeComponent = Mast.Tree.extend({
 	collection: "ExampleTreeCollection",
 
 	
-	// Called after initialization, before autorender
-	init: function () {},
+	// Called after initialization, before render
+	init: function () {
+
+	},
 	
 	afterRender: function () {
 		this.$el.disableSelection();
