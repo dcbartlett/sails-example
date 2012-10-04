@@ -28,7 +28,7 @@ Mast.registerComponent('TabbedArea',{
 		// The dogs collection is explicitly defined on the client
 		dogs: {
 			emptyHTML: 'No dogs found.',
-			collection: [],//[{name: 'Scruffy'}, {name: 'Suki'}],
+			collection: [{name: 'Scruffy'}, {name: 'Suki'}],
 			component: {
 				template: '.template-dogs-component'
 			}
