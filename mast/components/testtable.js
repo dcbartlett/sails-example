@@ -57,7 +57,7 @@ Mast.registerTree('TestTable',{
 	},
 	
 	// If a destroyed row is selected, deselect it
-	init: function(){
+	afterCreate: function(){
 		this.collection.on('remove',this.deselectDeletedModel);
 		this.collection.on('reset',this.deselectResetModel);
 	},
@@ -153,7 +153,7 @@ Mast.registerComponent('TestRow',{
 	},
 	
 	// Listen for when the dropdown form is submitted
-	init: function() {
+	afterCreate: function() {
 		this.on('dropdownSubmit',this.updateRow);
 	},
 	
