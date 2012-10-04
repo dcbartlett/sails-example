@@ -34,8 +34,7 @@ Mast.registerComponent('SimplerTree',{
 	}
 });
 
-Mast.components.ExampleTreeComponent = Mast.Tree.extend({
-	
+Mast.registerTree('ExampleTreeComponent',{
 	events: {
 		'click >a.doDelete':'deleteTree' ,
 		'click >a.addButton': 'addTree',
