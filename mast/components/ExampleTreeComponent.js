@@ -17,20 +17,20 @@ Mast.registerComponent('SimplerTree',{
 	
 	afterRender: function () {
 		this.$el.disableSelection();
-	},
-	
-	changeName: function(formFieldValue) {
-		this.set('name',formFieldValue);
+
+		// If this is the top-level tree, hide the delete button
+		if (!this.parent) {
+			this.$el.closest_descendant('a.doDelete').hide();
+		}
 	},
 	
 	deleteTree: function (e) {
-	
 		this.parent.collection.remove(this.model);
 	},
 	
 	addTree: function (e) {
-		
-		this.collection.add({value: this.get('value')+1});
+		this.children['.tree-outlet'].collection.add({value: this.get('value')+1});
+		console.log("TREECOMPONENT",this.children['.tree-outlet'],"COLLECTION models attrs",_.map(this.children['.tree-outlet'].collection.models,function(m){return m.attributes;}));
 	}
 });
 
