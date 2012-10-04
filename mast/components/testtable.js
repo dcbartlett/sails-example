@@ -36,8 +36,9 @@ Mast.registerTree('TestTable',{
 				this.$(".voteUp").show();
 				this.$(".voteDown").show();
 				
-				// Unhighlight the rest and highlight the proper row
+				// Unhighlight the rest 
 				this.collection.invoke('set','highlighted',false);
+				// and highlight the proper row
 				selectedModel.set('highlighted',true);
 			}
 			else {

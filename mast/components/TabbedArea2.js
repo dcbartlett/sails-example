@@ -14,12 +14,8 @@ Mast.registerComponent('TabbedArea2',{
 	},
 	
 	events: {
-		"click .parrots.tab": function(){
-			this.set('selected','parrots');
-		},
-		"click .cardinals.tab": function () {
-			this.set('selected','cardinals');
-		}
+		"click .parrots.tab": "#selected=parrots",
+		"click .cardinals.tab": "#selected=cardinals"
 	}
 });
 
