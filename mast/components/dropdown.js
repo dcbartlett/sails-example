@@ -6,28 +6,33 @@ Mast.registerComponent('DropdownComponent',{
 		value: ""
 	},
 	events: {
-		click:'openMenu', 
-		clickoutside: 'closeMenu',
+		click:'expand', 
+		clickoutside: 'collapse',
 		pressEnter: 'submitForm',
-		pressEscape: 'closeMenu',
+		pressEscape: 'collapse',
 		'click a.submit': 'submitForm'
 	},
-	beforeOpenMenu: function () {
-		
+	
+	beforeExpand: function () {
+		// Grab model from parent
+		this.set('value',this.parent.get('value'), {
+			render: false
+		});
 	},
-	openMenu: function(e) {
-		this.beforeOpenMenu && this.beforeOpenMenu();
+	expand: function(e) {
+		this.beforeExpand && this.beforeExpand();
 		
 		if (!this.get('open')) {
 			debug.debug("Opened menu.",this.get('value'));
 			this.set('open',true);
+			
 			this.setTemplate('.dropdown-expanded');
 			this.$el.find('input').focus();
 		}
 		e.stopImmediatePropagation();
 	},
 
-	closeMenu: function () {
+	collapse: function () {
 		if (this.get('open')) {
 			debug.debug("Closed menu.");
 			this.set('open',false);
@@ -38,7 +43,7 @@ Mast.registerComponent('DropdownComponent',{
 	submitForm: function (e) {
 		this.set('value',this.$el.find('input').val());
 		this.parent.trigger('dropdownSubmit',this.get('value'));
-		this.closeMenu();
+		this.collapse();
 		e.stopImmediatePropagation();
 		e.stopPropagation();
 	},

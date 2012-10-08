@@ -10,6 +10,24 @@
 exports.customMappings = function () {
 	
 	return {
+
+		// Default mappings
+		'/': {
+			controller:'meta',
+			action:'home'
+		},
+		'/500': {
+			controller:'meta',
+			action:'error'
+		},
+		'/404': {
+			controller:'meta',
+			action:'notfound'
+		},
+		'/403': {
+			controller:'meta',
+			action:'denied'
+		},
 		
 		// Authentication mappings
 		'/login': {

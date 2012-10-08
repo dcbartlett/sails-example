@@ -5,8 +5,8 @@ Mast.registerComponent('TabbedArea',{
 		selected: 'cats'
 	},
 	events: {
-		"click .cats.tab": '#selected=cats',
-		"click .dogs.tab": '#selected=dogs'
+		"click .cats.tab": '@selected=cats',
+		"click .dogs.tab": '@selected=dogs'
 	},
 	bindings: {
 		selected: function(){

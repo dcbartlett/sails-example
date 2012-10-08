@@ -7,8 +7,7 @@ Mast.models.ExampleTreeModel = Mast.Model.extend({
 		title: 'Sample',
 		value: Math.floor(Math.random()*5000)
 	}
-	
-})
+});
 
 Mast.models.ExampleTreeCollection = Mast.Collection.extend({
 	_class: 'ExampleTreeCollection',
