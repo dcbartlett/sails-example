@@ -1,11 +1,18 @@
 // Custom URL mappings
 // *********************
 // 
-// Use for situations where:
-//		/controllerName/methodName
-// and backbone semantics (routing by HTTP verb) are not enough
-// 
-// You can override default url mappings (404,500,home) here as well.
+// This table routes urls to controllers/actions.
+//
+// If the URL is not specified here, the default route for a URL is:  /:controller/:action/:id
+// where :controller, :action, and the :id request parameter are derived from the url
+//
+// If :action is not specified, Sails will redirect to the appropriate action 
+// based on the HTTP verb: (using REST/Backbone conventions)
+//
+//		GET:	/:controller/read/:id
+//		POST:	/:controller/create
+//		PUT:	/:controller/update/:id
+//		DELETE:	/:controller/destroy/:id
 //
 module.exports = {
 

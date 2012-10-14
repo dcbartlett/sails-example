@@ -77,7 +77,7 @@ exports.policy = {
 			}, function () {
 				res.render('403',{title:'Access Denied'});
 			});
-		}
+		};
 	}
 }
 

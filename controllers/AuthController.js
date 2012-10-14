@@ -2,6 +2,12 @@ var AuthController ={
 	
 	// Login to an Account
 	login: function (req,res) {
+		// When the form is visited, remember where the user was trying to go so she can be redirected back
+		if (req.method === 'GET') {
+			req.session.reroutedFrom = req.headers['referer'];
+			_.shout(req.session.reroutedFrom);
+		}
+
 		var secretAttempt = req.body && req.body.secret;
 
 		if (secretAttempt) {
@@ -42,7 +48,6 @@ var AuthController ={
 		AuthenticationService.session.unlink(req);
 		res.redirect('/login');
 	},
-	
 	
 	
 	// Register for an Account
