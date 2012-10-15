@@ -2,7 +2,6 @@
     "name": "sails-example",
     "version": "12.09.21",
     "dependencies": {
-        "sails": ">=12.09.10",
-        "restler": "2.0.1"
+        "sails": "git://github.com/ghernandez345/sails.git"
     }
 }
