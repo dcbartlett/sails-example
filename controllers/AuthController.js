@@ -1,140 +1,135 @@
-var AuthController ={
-	
+var AuthController = {
+
 	// Login to an Account
-	login: function (req,res) {
+	login: function(req, res) {
 		// When the form is visited, remember where the user was trying to go so she can be redirected back
-		if (req.method === 'GET') {
+		if(!req.headers['referer'] || req.headers['referer'].match(/\/login\/?$/)) {
+			req.session.reroutedFrom = null;
+		} else {
 			req.session.reroutedFrom = req.headers['referer'];
-			_.shout(req.session.reroutedFrom);
 		}
 
 		var secretAttempt = req.body && req.body.secret;
 
-		if (secretAttempt) {
-			
+		if(secretAttempt) {
+
 			Account.find({
 				where: {
 					password: secretAttempt
 				}
-			}).success(function (account) {
-				
-				if (account) {
+			}).success(function(account) {
+
+				if(account) {
 					// Store authenticated state in session
-					AuthenticationService.session.link(req,account);
-					AuthenticationService.session.redirectToOriginalDestination(req,res);
-				}
-				else {
+					AuthenticationService.session.link(req, account);
+					AuthenticationService.session.redirectToOriginalDestination(req, res);
+				} else {
 					// Unknown user
 					res.view('auth/login', {
 						title: 'Login | Sails Framework',
-						loginError: (secretAttempt && secretAttempt.length>0) ? 'That password is incorrect.' : null
+						loginError: (secretAttempt && secretAttempt.length > 0) ? 'That password is incorrect.' : null
 					});
 				}
 			}).error(function() {
 				debug.error("An error occured while logging in!");
 			});
-		}
-		else {
+		} else {
 			res.view('auth/login', {
-				loginError: (secretAttempt && secretAttempt.length>0) ? 'Please specify a password.' : null
+				loginError: (secretAttempt && secretAttempt.length > 0) ? 'Please specify a password.' : null
 			});
 		}
 	},
-	
-	
+
+
 	// Logout of an Account
-	logout: function (req,res,next) {
+	logout: function(req, res, next) {
 		req.session.reroutedFrom = null;
 		AuthenticationService.session.unlink(req);
 		res.redirect('/login');
 	},
-	
-	
+
+
 	// Register for an Account
-	register: function (req,res) {
+	register: function(req, res) {
 		var attempt = req.body && req.body.submitted;
-		
+
 		// Register new account object
-		if (attempt) {
-			
-			var account = Account.create ({
-				username:req.body.username,
-				password:req.body.password
-			}).success(function(){
+		if(attempt) {
+
+			var account = Account.create({
+				username: req.body.username,
+				password: req.body.password
+			}).success(function() {
 				debug.debug("REGISTRATION SUCCEEDED and user logged in.");
-				
+
 				// Attempt to send registration email
-				AuthenticationService.session.link(req,account);
+				AuthenticationService.session.link(req, account);
 				req.flash("Your account was registered successfully!");
-				
-				var myMsg = new Email(
-				{ from: "bot@sailsjs.com"
-				, to:   "michael.r.mcneil@gmail.com"
-				, subject: "Knock knock..."
-				, body: "Who's there?"
+
+				var myMsg = new Email({
+					from: "bot@sailsjs.com",
+					to: "michael.r.mcneil@gmail.com",
+					subject: "Knock knock...",
+					body: "Who's there?"
 				});
 
 				// if callback is provided, errors will be passed into it
 				// else errors will be thrown
-				myMsg.send(function(err){ 
-					debug.debug(err,"\n","Message sent successfully.");
+				myMsg.send(function(err) {
+					debug.debug(err, "\n", "Message sent successfully.");
 					res.redirect('/');
 				});
-			})
-			.error(function() {
+			}).error(function() {
 				debug.debug("REGISTRATION FAILED!!!!");
-				
+
 				req.flash("An error occured while processing your registration.");
 				res.redirect('auth/register');
 			});
-		}
-		else {
+		} else {
 			res.view('auth/register', {
 				title: 'Register | Sails Framework'
 			});
 		};
 	},
-	
-	
+
+
 	// Register as an admin
-	registerAdmin: function (req,res) {
+	registerAdmin: function(req, res) {
 		var attempt = req.body && req.body.submitted;
-		
+
 		function error() {
 			debug.debug("REGISTRATION FAILED!!!!");
-				
+
 			req.flash("An error occured while processing your registration.");
 			res.redirect('/auth/registerAdmin');
 		}
-		
+
 		// Register new account object
-		if (attempt) {
-			
+		if(attempt) {
+
 			var account = Account.build({
-				username:req.body.username,
-				password:req.body.password
+				username: req.body.username,
+				password: req.body.password
 			});
-			if (account.validate()) {
+			if(account.validate()) {
 				return error();
 			}
-			
-			account.save().success(function(a){
-				a.setRoleByName('admin',function(){
-					debug.debug("REGISTRATION SUCCEEDED and user logged in.");		
 
-					AuthenticationService.session.link(req,a);
+			account.save().success(function(a) {
+				a.setRoleByName('admin', function() {
+					debug.debug("REGISTRATION SUCCEEDED and user logged in.");
+
+					AuthenticationService.session.link(req, a);
 					req.flash("Your account was registered successfully!");
 					res.redirect('/');
 				});
-			})
-			.error(error);
-		}
-		else {
+			}).error(error);
+		} else {
 			res.view('auth/registerAdmin', {
 				title: 'Register | Sails Framework'
 			});
 		};
 	}
-	
+
 };
-_.extend(exports,AuthController);
+_.extend(exports, AuthController);
