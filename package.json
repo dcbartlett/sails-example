@@ -2,6 +2,6 @@
     "name": "sails-example",
     "version": "12.09.21",
     "dependencies": {
-        "sails": "git://github.com/ghernandez345/sails.git"
+        "sails": "git://github.com/balderdashy/sails.git"
     }
 }
