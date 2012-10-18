@@ -8,7 +8,7 @@ git clone git@github.com:balderdashy/sails-example.git sails-example && cd sails
 Install Sails (uses package.json):
 
 ```
-npm install
+npm install --force
 ```
 
 Finally, copy and rename the example config.ex.js file:
