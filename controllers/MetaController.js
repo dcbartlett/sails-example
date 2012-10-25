@@ -5,6 +5,10 @@ var MetaController = {
 	// CASE-INSENSITIVE
 	id: 'meta',
 	
+	test: function (req,res) {
+		_.shout("host",req.header('host'));
+	},
+
 	home: function (req,res) {
 
 		res.view('meta/home');
