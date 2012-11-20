@@ -6,7 +6,12 @@ module.exports = function(roleName) {
 
 		// Check if this Account has the specified role
 		Account.hasRole(req.session.account,roleName,next, function () {
-			res.render('denied',{title:'Access Denied'});
+			if (Mast.isSocket || Mast.xhr) {
+				res.send(403);
+			}
+			else {
+				res.render('denied',{title:'Access Denied'});
+			}
 		});
 	};
 };

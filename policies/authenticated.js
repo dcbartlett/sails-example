@@ -6,6 +6,12 @@ module.exports = function (req,res,ok) {
 		ok();
 	}
 	else {
-		res.render('denied',{title:'Access Denied'});
+
+		if (Mast.isSocket || Mast.xhr) {
+			res.send(403);
+		}
+		else {
+			res.render('denied',{title:'Access Denied'});
+		}
 	}
 };

@@ -2,6 +2,7 @@
 require('sails').lift({
 	appName: "Sails Example",
 
+	// Prepopulate the database
 	bootstrap: function() {
 		Role.findOrCreate({
 			name: 'admin'
@@ -20,13 +21,13 @@ require('sails').lift({
 
 	appPath: __dirname,
 
-	port: 5009,
-
-	appEnvironment: 'development',
+	environment: 'development',
 
 	datasource: require("./config").datasource,
 
-	rigging: true
+	rigging: {
+	    outputPath: './.compiled'
+	}
 
 	// To make the server use SSL (https), specify a key and cert string
 	// ssl: {
