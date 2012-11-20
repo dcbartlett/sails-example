@@ -18,7 +18,7 @@ Mast.registerTree('TestTable',{
 	},
 	
 	subscriptions: {		
-		'experiment/create': function(atrs) {
+		'~experiment/create': function(atrs) {
 			this.collection.add(atrs);
 			this.collection.sort();
 		}
