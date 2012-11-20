@@ -21,3 +21,6 @@ public/_target/*.css
 
 # Ignore compiled LESS
 mast/templates/less-output.css
+
+
+.compiled
