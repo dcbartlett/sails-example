@@ -31,7 +31,7 @@ var AuthController = {
 					});
 				}
 			}).error(function() {
-				debug.error("An error occured while logging in!");
+				sails.log.error("An error occured while logging in!");
 			});
 		} else {
 			res.view('auth/login', {
@@ -60,7 +60,7 @@ var AuthController = {
 				username: req.body.username,
 				password: req.body.password
 			}).success(function() {
-				debug.debug("REGISTRATION SUCCEEDED and user logged in.");
+				sails.log.debug("REGISTRATION SUCCEEDED and user logged in.");
 
 				// Attempt to send registration email
 				AuthenticationService.session.link(req, account);
@@ -76,11 +76,11 @@ var AuthController = {
 				// if callback is provided, errors will be passed into it
 				// else errors will be thrown
 				myMsg.send(function(err) {
-					debug.debug(err, "\n", "Message sent successfully.");
+					sails.log(err, "\n", "Message sent successfully.");
 					res.redirect('/');
 				});
 			}).error(function() {
-				debug.debug("REGISTRATION FAILED!!!!");
+				sails.log("REGISTRATION FAILED!!!!");
 
 				req.flash("An error occured while processing your registration.");
 				res.redirect('auth/register');
@@ -89,7 +89,7 @@ var AuthController = {
 			res.view('auth/register', {
 				title: 'Register | Sails Framework'
 			});
-		};
+		}
 	},
 
 
@@ -98,7 +98,7 @@ var AuthController = {
 		var attempt = req.body && req.body.submitted;
 
 		function error() {
-			debug.debug("REGISTRATION FAILED!!!!");
+			sails.log.debug("REGISTRATION FAILED!!!!");
 
 			req.flash("An error occured while processing your registration.");
 			res.redirect('/auth/registerAdmin');
@@ -117,7 +117,7 @@ var AuthController = {
 
 			account.save().success(function(a) {
 				a.setRoleByName('admin', function() {
-					debug.debug("REGISTRATION SUCCEEDED and user logged in.");
+					sails.log.debug("REGISTRATION SUCCEEDED and user logged in.");
 
 					AuthenticationService.session.link(req, a);
 					req.flash("Your account was registered successfully!");
@@ -128,7 +128,7 @@ var AuthController = {
 			res.view('auth/registerAdmin', {
 				title: 'Register | Sails Framework'
 			});
-		};
+		}
 	}
 
 };
