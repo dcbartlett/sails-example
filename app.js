@@ -23,8 +23,6 @@ require('sails').lift({
 
 	environment: 'development',
 
-	datasource: require("./config").datasource,
-
 	rigging: {
 	    outputPath: './.compiled'
 	}

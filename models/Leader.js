@@ -1,4 +1,4 @@
-Leader = Model.extend({
-	title: STRING,
-	votes: INTEGER
-});
+exports.attributes = {
+	title: 'STRING',
+	votes: 'INTEGER'
+};

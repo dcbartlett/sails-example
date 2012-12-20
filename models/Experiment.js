@@ -1,5 +1,5 @@
-Experiment = Model.extend({
-	title: STRING,
-	value: INTEGER,
-	votes: INTEGER
-});
+exports.attributes = {
+	title: 'STRING',
+	value: 'INTEGER',
+	votes: 'INTEGER'
+};

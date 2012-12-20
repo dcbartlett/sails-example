@@ -1,20 +1,3 @@
-Cat = Model.extend({
+exports.attributes = {
 
-	name: STRING
-	
-	// Attributes/Schema
-	// 
-	// ex.
-	// attrName: {
-	//	type: STRING,
-	//	validate: {
-	//	is: ['someValue','someOtherValue']
-	//	}
-	// },
-	
-	// Associations
-	// 
-	// ex.
-	// belongsTo: [ 'SomeModel', 'SomeOtherModel']
-	
-});
+};
