@@ -2,7 +2,7 @@
 To install this demo app, first install Node.js and npm.  Then clone this repo and cd into it:
 
 ```
-git clone git@github.com:balderdashy/sails-example.git sails-example && cd sails-example
+git clone git://github.com/balderdashy/sails-example.git sails-example && cd sails-example
 ```
 
 Install Sails (uses package.json):
@@ -14,7 +14,7 @@ npm install
 Finally, copy and rename the example config.ex.js file:
 
 ```
-cp config.js.ex config.js
+cp config.ex.js config.js
 ```
 
 And customize it accordingly for your datasource:
