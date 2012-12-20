@@ -9,31 +9,38 @@ var AuthController = {
 			req.session.reroutedFrom = req.headers['referer'];
 		}
 
+		// Password specified
 		var secretAttempt = req.body && req.body.secret;
-
 		if(secretAttempt) {
 
 			Account.find({
 				where: {
 					password: secretAttempt
 				}
-			}).success(function(account) {
+			},function(err,account) {
+				// Error occurred
+				if (err) {
+					sails.log.error("An error occured while logging in!");
+					return res.redirect('/');
+				} 
 
-				if(account) {
-					// Store authenticated state in session
+				// Log the user in
+				if (account) {
 					AuthenticationService.session.link(req, account);
 					AuthenticationService.session.redirectToOriginalDestination(req, res);
-				} else {
-					// Unknown user
+				} 
+				// Unknown user
+				else {
 					res.view('auth/login', {
 						title: 'Login | Sails Framework',
 						loginError: (secretAttempt && secretAttempt.length > 0) ? 'That password is incorrect.' : null
 					});
 				}
-			}).error(function() {
-				sails.log.error("An error occured while logging in!");
 			});
-		} else {
+		} 
+
+		// No password specified
+		else {
 			res.view('auth/login', {
 				loginError: (secretAttempt && secretAttempt.length > 0) ? 'Please specify a password.' : null
 			});
@@ -51,11 +58,11 @@ var AuthController = {
 
 	// Register for an Account
 	register: function(req, res) {
+		// Registration submitted
 		var attempt = req.body && req.body.submitted;
+		if (attempt) {
 
-		// Register new account object
-		if(attempt) {
-
+			// Register new account object
 			var account = Account.create({
 				username: req.body.username,
 				password: req.body.password
@@ -85,7 +92,10 @@ var AuthController = {
 				req.flash("An error occured while processing your registration.");
 				res.redirect('auth/register');
 			});
-		} else {
+		} 
+		
+		// No data submitted yet
+		else {
 			res.view('auth/register', {
 				title: 'Register | Sails Framework'
 			});
