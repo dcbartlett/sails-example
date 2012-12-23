@@ -1,6 +1,6 @@
 {
     "name": "sails-example",
-    "version": "12.09.21",
+    "version": "12.12.23",
     "dependencies": {
         "sails": "git://github.com/balderdashy/sails.git#waterline"
     }

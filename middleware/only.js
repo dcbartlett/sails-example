@@ -6,7 +6,7 @@ module.exports = function(roleName) {
 
 		// Check if this Account has the specified role
 		Account.hasRole(req.session.account,roleName,next, function () {
-			if (Mast.isSocket || Mast.xhr) {
+			if (req.isSocket || req.xhr) {
 				res.send(403);
 			}
 			else {

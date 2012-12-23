@@ -6,8 +6,7 @@ module.exports = function (req,res,ok) {
 		ok();
 	}
 	else {
-
-		if (Mast.isSocket || Mast.xhr) {
+		if (req.isSocket || req.xhr) {
 			res.send(403);
 		}
 		else {

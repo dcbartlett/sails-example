@@ -1,4 +1,4 @@
-var policy = sails.policies;
+var policy = sails.middleware;
 module.exports = {
 
 	// Default policy
