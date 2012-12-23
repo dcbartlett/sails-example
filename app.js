@@ -3,20 +3,19 @@ require('sails').lift({
 	appName: "Sails Example",
 
 	// Prepopulate the database
-	bootstrap: function() {
-		Role.findOrCreate({
-			name: 'admin'
-		}, ['name'], function(err, r) {
-			console.log("DB bootstrap complete.");
-		});
+	bootstrap: function(cb) {
+		// Role.findOrCreate({
+		// 	name: 'admin'
+		// }, ['name'], function(err, r) {
+		// });
 
 		// Populate leaderboard data
-		_.each(['Claude Shannon', 'Carl Friedrich Gauss', 'Marie Curie', 'Ada Lovelace', 'Grace Hopper', 'Nikola Tesla'], function(title, index) {
+		async.forEach(['Claude Shannon', 'Carl Friedrich Gauss', 'Marie Curie', 'Ada Lovelace', 'Grace Hopper', 'Nikola Tesla'], function(title, cb) {
 			Leader.findOrCreate({
 				title: title,
 				votes: 0
-			}, ['title'], function() {});
-		});
+			}, {}, cb);
+		}, cb);
 	},
 
 	appPath: __dirname,
