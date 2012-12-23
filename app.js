@@ -15,7 +15,7 @@ require('sails').lift({
 			}, cb);
 		}, function (err) {
 			if (err) cb(err);
-			else Role.findOrCreate({ name: 'admin' },{ name: 'admin' },cb);
+			else sails.models.role.findOrCreate({ name: 'admin' },{ name: 'admin' },cb);
 		});
 	},
 
