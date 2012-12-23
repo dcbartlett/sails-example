@@ -1,4 +1,3 @@
-var policy = sails.middleware;
 module.exports = {
 
 	// Default policy
@@ -13,22 +12,10 @@ module.exports = {
 	},
 
 	'settings': {
-		"*": policy.authenticated
+		"*": ['setup','authenticated']
 	},
 
 	'admin': {
-		'*': policy.only('admin')
+		'*': sails.middleware.only('admin')
 	}
 };
-/**
-
-someController: {
-
-	// Apply to all unspecified actions on this controller unless otherwise specified below
-	'*': {},
-
-	// Override the wildcard policy
-	someAction: policy.somePolicy
-}
-
-*/
