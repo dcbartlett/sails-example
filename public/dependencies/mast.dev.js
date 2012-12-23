@@ -5770,12 +5770,15 @@ debug = (function(){
 
 (function(){
 
+
 	// Map a few pressFoo events automatically
-	pressFoo(27,'pressEscape');
-	pressFoo(13,'pressEnter');
+	pressFoo(27,'pressEscape', false, 'keydown');
+	pressFoo(27,'pressEsc', false, 'keydown');
+	pressFoo(13,'pressEnter',false, 'keydown');
 	
 	// Map global pressFoo events
 	pressFoo(27,'gPressEscape',true,"keydown");
+	pressFoo(27,'gPressEsc',true,"keydown");
 	pressFoo(13,'gPressEnter',true,'keydown');
 	
 	
@@ -5790,12 +5793,12 @@ debug = (function(){
 			return function(e) {
 				e.stopPropagation();
 				var pressedkeycode = e.keyCode || e.which;
-				if(pressedkeycode == keyCode) {
-					e.preventDefault();
+				if(pressedkeycode === keyCode) {
+					// e.preventDefault();
 					origTarget.triggerHandler( handlerName,e );
 				}
-			}
-		}
+			};
+		};
 		
 		// Add our new event to jQuery
 		// (handlerName is the name of the new event)
@@ -5842,173 +5845,17 @@ debug = (function(){
 				// native event binding on this element.
 				return;
 			}
-		}
+		};
 	}
 
 })();
 
-/***
- * 
-var rfocusMorph = /^(?:focusinfocus|focusoutblur)$/;
-jQuery.fn.triggerHandlerSpecial = function( type, data ) {
-	if ( this[0] ) {
-		return jQuery.event.triggerSpecial( type, data, this[0], true );
-	}
-}; 
-jQuery.event.triggerSpecial = function( event, data, elem, onlyHandlers ) {
-	// Don't do events on text and comment nodes
-	if ( elem && (elem.nodeType === 3 || elem.nodeType === 8) ) {
-		return;
-	}
-
-	// Event object or event type
-	var cache, exclusive, i, cur, old, ontype, special, handle, eventPath, bubbleType,
-	type = event.type || event,
-	namespaces = [];
-
-	// focus/blur morphs to focusin/out; ensure we're not firing them right now
-	if ( rfocusMorph.test( type + jQuery.event.triggered ) ) {
-		return;
-	}
-
-	if ( type.indexOf( "!" ) >= 0 ) {
-		// Exclusive events trigger only for the exact event (no namespaces)
-		type = type.slice(0, -1);
-		exclusive = true;
-	}
-
-	if ( type.indexOf( "." ) >= 0 ) {
-		// Namespaced trigger; create a regexp to match event type in handle()
-		namespaces = type.split(".");
-		type = namespaces.shift();
-		namespaces.sort();
-	}
-
-	if ( (!elem || jQuery.event.customEvent[ type ]) && !jQuery.event.global[ type ] ) {
-		// No jQuery handlers for this event type, and it can't have inline handlers
-		return;
-	}
-
-	// Caller can pass in an Event, Object, or just an event type string
-	event = typeof event === "object" ?
-		// jQuery.Event object
-	event[ jQuery.expando ] ? event :
-		// Object literal
-	new jQuery.Event( type, event ) :
-		// Just the event type (string)
-	new jQuery.Event( type );
-
-	event.type = type;
-	event.isTrigger = true;
-	event.exclusive = exclusive;
-	event.namespace = namespaces.join( "." );
-	event.namespace_re = event.namespace? new RegExp("(^|\\.)" + namespaces.join("\\.(?:.*\\.|)") + "(\\.|$)") : null;
-	ontype = type.indexOf( ":" ) < 0 ? "on" + type : "";
-
-	// Handle a global trigger
-	if ( !elem ) {
-
-		// TODO: Stop taunting the data cache; remove global events and always attach to document
-		cache = jQuery.cache;
-		for ( i in cache ) {
-			if ( cache[ i ].events && cache[ i ].events[ type ] ) {
-				jQuery.event.trigger( event, data, cache[ i ].handle.elem, true );
-			}
-		}
-		return;
-	}
-
-	// Clean up the event in case it is being reused
-	event.result = undefined;
-	if ( !event.target ) {
-		event.target = elem;
-	}
-
-	// Clone any incoming data and prepend the event, creating the handler arg list
-	data = data != null ? jQuery.makeArray( data ) : [];
-	//	data.unshift( event );
-
-	// Allow special events to draw outside the lines
-	special = jQuery.event.special[ type ] || {};
-	if ( special.trigger && special.trigger.apply( elem, data ) === false ) {
-		return;
-	}
-
-	// Determine event propagation path in advance, per W3C events spec (#9951)
-	// Bubble up to document, then to window; watch for a global ownerDocument var (#9724)
-	eventPath = [[ elem, special.bindType || type ]];
-	if ( !onlyHandlers && !special.noBubble && !jQuery.isWindow( elem ) ) {
-
-		bubbleType = special.delegateType || type;
-		cur = rfocusMorph.test( bubbleType + type ) ? elem : elem.parentNode;
-		for ( old = elem; cur; cur = cur.parentNode ) {
-			eventPath.push([ cur, bubbleType ]);
-			old = cur;
-		}
-
-		// Only add window if we got to document (e.g., not plain obj or detached DOM)
-		if ( old === (elem.ownerDocument || document) ) {
-			eventPath.push([ old.defaultView || old.parentWindow || window, bubbleType ]);
-		}
-	}
-
-	// Fire handlers on the event path
-	for ( i = 0; i < eventPath.length && !event.isPropagationStopped(); i++ ) {
-
-		cur = eventPath[i][0];
-		event.type = eventPath[i][1];
-
-		handle = ( jQuery._data( cur, "events" ) || {} )[ event.type ] && jQuery._data( cur, "handle" );
-		if ( handle ) {
-			handle.apply( cur, data );
-		}
-		// Note that this is a bare JS function and not a jQuery handler
-		handle = ontype && cur[ ontype ];
-		if ( handle && jQuery.acceptData( cur ) && handle.apply( cur, data ) === false ) {
-			event.preventDefault();
-		}
-	}
-	event.type = type;
-
-	// If nobody prevented the default action, do it now
-	if ( !onlyHandlers && !event.isDefaultPrevented() ) {
-
-		if ( (!special._default || special._default.apply( elem.ownerDocument, data ) === false) &&
-			!(type === "click" && jQuery.nodeName( elem, "a" )) && jQuery.acceptData( elem ) ) {
-
-			// Call a native DOM method on the target with the same name name as the event.
-			// Can't use an .isFunction() check here because IE6/7 fails that test.
-			// Don't do default actions on window, that's where global variables be (#6170)
-			// IE<9 dies on focus/blur to hidden element (#1486)
-			if ( ontype && elem[ type ] && ((type !== "focus" && type !== "blur") || event.target.offsetWidth !== 0) && !jQuery.isWindow( elem ) ) {
-
-				// Don't re-trigger an onFOO event when we call its FOO() method
-				old = elem[ ontype ];
-
-				if ( old ) {
-					elem[ ontype ] = null;
-				}
-
-				// Prevent re-triggering of the same event, since we already bubbled it above
-				jQuery.event.triggered = type;
-				elem[ type ]();
-				jQuery.event.triggered = undefined;
-
-				if ( old ) {
-					elem[ ontype ] = old;
-				}
-			}
-		}
-	}
-
-	return event.result;
-}
 
 
- */
 
 
 // Build mast objects and set defaults
+// Mast is also a global event dispatcher (before router is instantiated!)
 Mast = _.extend(Backbone, {
 
 	// Whether to remove ids from template elements automatically before absorption
@@ -6026,11 +5873,13 @@ Mast = _.extend(Backbone, {
 	// Detect mobile viewports (looks at the user agent string)
 	isMobile: navigator.userAgent.match(/(iPhone|iPod|Android|BlackBerry)/ig),
 
+	isTouch: navigator.userAgent.match(/(iPad|iPhone|iPod|Android|BlackBerry)/ig),
+
 	// Mast.raise() instantiates the Mast library with the specified options
 	raise: function(options, afterLoadFn, beforeRouteFn) {
 
 		// If function is specified as first argument, use it as 
-		if (_.isFunction(options)) {
+		if(_.isFunction(options)) {
 			afterLoadFn = options;
 			options = {
 				afterLoadFn: options
@@ -6038,7 +5887,7 @@ Mast = _.extend(Backbone, {
 		}
 
 		// Set up template settings
-		_.templateSettings = {
+		_.templateSettings = (options && options.templateSettings) || {
 			//			variable: 'data',
 			interpolate: /\{\{(.+?)\}\}/g,
 			escape: /\{\{-(.+?)\}\}/g,
@@ -6053,12 +5902,12 @@ Mast = _.extend(Backbone, {
 			});
 
 			// Absorb key Mast property overrides from options
-			if (options.removeTemplateIds !== undefined) {
+			if(options.removeTemplateIds !== undefined) {
 				Mast.removeTemplateIds = options.removeTemplateIds;
 			}
 
 			// Register Mast.entities and enable inheritance
-			Mast.mixins.registerEntities(); 
+			Mast.mixins.registerEntities();
 
 
 			// Prepare template library
@@ -6069,77 +5918,70 @@ Mast = _.extend(Backbone, {
 
 			// Initialize Socket
 			// Override default base URL if one was specified
-			if (Mast.Socket && options.socket) {
+			if(Mast.Socket && options.socket) {
 				Mast.Socket.baseurl = (options && options.baseurl) || Mast.Socket.baseurl;
 				Mast.Socket.initialize();
 			}
 
-			// Create global event dispatcher (before router is instantiated!)
-			Mast.Dispatcher = _.clone(Backbone.Events);
-
 			// Before routing, trigger beforeRouteFn callback (if specified)
 			options.beforeRouteFn && options.beforeRouteFn();
 
-			// var self = this;
-			// _.defer(function() {
+			// Clone router
+			Mast.Router = Backbone.Router.extend({});
 
-				// Clone router
-				Mast.Router = Backbone.Router.extend({});
-				
-				// Instantiate router and trigger routerInitialized event on components
-				var router = new Mast.Router();
+			// Instantiate router and trigger routerInitialized event on components
+			var router = new Mast.Router();
 
-				// "Warm up" the router so that it will create Backbone.history
-				router.route("somecrazyneverusedthing","somenameofsomecrazyneverusedthing",function(){
-					throw new Error ("Can't listen on a route using reserved word: somenameofsomecrazyneverusedthing!");
-				});
-				
-				// Add wildcard route
-				Backbone.history.route(/.+/,function(fragment) {
-					Mast.Dispatcher.trigger("route:"+"#"+fragment);
-				});
+			// "Warm up" the router so that it will create Backbone.history
+			router.route("somecrazyneverusedthing", "somenameofsomecrazyneverusedthing", function() {
+				throw new Error("Can't listen on a route using reserved word: somenameofsomecrazyneverusedthing!");
+			});
 
-				// LEGACY: Decorate and interpret defined routes
-				// (Routes are now handled as subscriptions in components)
-				_.each(Mast.routes, function(action, query) {
-					// "routes" is a reserved word
-					if(query == "routes") throw new Error("Can't define a route using reserved word: '" + query + "'!");
+			// Add wildcard route
+			Backbone.history.route(/.*/, function(fragment) {
 
-					// Index and "" are the same thing
-					if(query === "index" || query ==="") {
-						router.route("","index",action);
-					}
+				// Trigger specific route event
+				Mast.trigger("route:#" + fragment);
 
-					// Set up route
-					router.route(query,query,action);
-				});
+				// Trigger cross-browser global hashchange event
+				Mast.trigger("event:$hashchange");
+			});
 
-				// Mast makes the assumption that you want to trigger
-				// the route handler.  This can be overridden
-				Mast.navigate = function(query, options) {
-					return router.navigate(query, _.extend({
-						trigger: true
-					}, options));
-				};
+			// LEGACY: Decorate and interpret defined routes
+			// (Routes are now handled as subscriptions in components)
+			_.each(Mast.routes, function(action, query) {
+				// "routes" is a reserved word
+				if(query == "routes") throw new Error("Can't define a route using reserved word: '" + query + "'!");
 
-				// Make Mast.on() and Mast.trigger() defer to the dispatcher
-				Mast.on = Mast.Dispatcher.on;
-				Mast.trigger = Mast.Dispatcher.trigger;
+				// Index and "" are the same thing
+				if(query === "index" || query === "") {
+					router.route("", "index", action);
+				}
 
-				// TODO: Go ahead and absorb all of the templates in the library 
-				// right from the get-go
-				// TODO: parse rest of DOM to find and absorb implicit templates
-				// when document is ready
-				// $(function() {
+				// Set up route
+				router.route(query, query, action);
+			});
 
-				// Launch history manager 
-				Mast.history.start();
+			// Mast makes the assumption that you want to trigger
+			// the route handler.  This can be overridden
+			Mast.navigate = function(query, options) {
+				return router.navigate(query, _.extend({
+					trigger: true
+				}, options));
+			};
 
-				// When Mast and $.document are ready, 
-				// trigger afterLoad callback (if specified)
-				options.afterLoadFn && _.defer(options.afterLoadFn);
-				// });
-			// });
+
+			// TODO: Go ahead and absorb all of the templates in the library 
+			// right from the get-go
+			// TODO: parse rest of DOM to find and absorb implicit templates
+			
+			// Launch history manager 
+			Mast.history.start();
+
+			// When Mast and $.document are ready, 
+			// trigger afterLoad callback (if specified)
+			options.afterLoadFn && _.defer(options.afterLoadFn);
+			options.afterRouteFn && _.defer(options.afterRouteFn);
 		});
 	}
 }, Backbone.Events);
@@ -6240,7 +6082,7 @@ Mast.mixins = {
 
 					// Map shorthand
 					newEntity.prototype.events = _.objMap(newEntity.prototype.events,Mast.mixins.interpretShorthand);
-					newEntity.prototype.bindings = _.objMap(newEntity.prototype.bindings,Mast.mixins.interpretShorthand);
+					// newEntity.prototype.bindings = _.objMap(newEntity.prototype.bindings,Mast.mixins.interpretShorthand);
 					newEntity.prototype.subscriptions = _.objMap(newEntity.prototype.subscriptions,Mast.mixins.interpretShorthand);
 
 					Mast._registerQueue.splice(i, 1);
@@ -6517,9 +6359,13 @@ Mast.Socket =_.extend(
 	// Override backbone.sync when Socket object is instantiated
 	initialize: function(cb) {
 		_.bindAll(this);
+
 		this.autoconnect && this.connect(cb);
-		Backbone.sync = function(method, model, options) {						// Override Backbone.sync	
-			switch (method) {													// (reference: http://documentcloud.github.com/backbone/docs/backbone-localstorage.html)
+
+		// Override Backbone.sync for Socket
+		// (reference: http://documentcloud.github.com/backbone/docs/backbone-localstorage.html)
+		Backbone.sync = function(method, model, options) {
+			switch (method) {
 				case "read":
 					model.id ? 
 						Mast.Socket.find(model,options) : 
@@ -6546,8 +6392,7 @@ Mast.Socket =_.extend(
 		this.io = this.io || window.io;
 		if (!this.io) {
 			throw new Error(
-			"Can't connect to socket because the Socket.io "+
-			"client library (io) cannot be found!"
+			"Can't connect to socket because the Socket.io client library (io) cannot be found!"
 			);
 		}
 		if (this.connected) {
@@ -6557,12 +6402,18 @@ Mast.Socket =_.extend(
 				);
 		}
 		this.baseurl = baseurl || this.baseurl;
+		
+		debug.debug("Connecting socket to "+this.baseurl);
 		this._socket = this.io.connect(this.baseurl);
-		Mast.Socket._socket.on('sessionUpdated',function(data) {				// Listen for latest session data from server and update local store
+
+		// Listen for latest session data from server and update local store
+		Mast.Socket._socket.on('sessionUpdated',function(data) {
 			Mast.Session = data;
 			Mast.Socket.trigger('sessionUpdated');
 		});
-		Mast.Socket._socket.on('message',function(cometMessage) {				// Route server-sent comet events
+
+		// Route server-sent comet events
+		Mast.Socket._socket.on('message',function(cometMessage) {
 			if (cometMessage.uri) {
 				Mast.Socket.route(cometMessage.uri,_.clone(cometMessage.data));
 			}
@@ -6668,22 +6519,39 @@ Mast.Socket =_.extend(
 	},
 	
 	// Request wrappers for each of the CRUD HTTP verbs
-	get: function (url,data,options) { this.request(url,data,options,'get') },
-	post: function (url,data,options) { this.request(url,data,options,'post') },
-	put: function (url,data,options) { this.request(url,data,options,'put') },
-	'delete': function (url,data,options) { this.request(url,data,options,'delete') },
+	get: function (url,data,options) { this.request(url,data,options,'get'); },
+	post: function (url,data,options) { this.request(url,data,options,'post'); },
+	put: function (url,data,options) { this.request(url,data,options,'put'); },
+	'delete': function (url,data,options) { this.request(url,data,options,'delete'); },
 	
 	// Simulate an HTTP request to the backend
 	request: function (url,data,options, method) {
-		url = url.replace(/\/*$/,'');											// Remove trailing slash
+		// Remove trailing slashes and spaces
+		url = url.replace(/\/*\s*$/,'');
+
+		// If url is empty, use /
+		if (url === '') url = '/';
+
+		// If options is a function, treat it as a callback
+		// Otherwise the "success" property will be treated as the callback
+		var cb;
+		if (_.isFunction(options)) cb = options;
+		else cb = options.success;
+
+		// If not connected, fall back to $.ajax
+		if (!this.connected) {
+			return $.ajax(url,_.extend(options,{
+				data: data,
+				type: method
+			}));
+		}
+
 		this._send('message',{
 			url: url,
 			data: data,
 			method: method || 'get'
 		},function (parsedResult) {
-			options && ((_.isFunction(options) ? 
-				options :														// If options is a function, treat it as a callback
-				options.success) (parsedResult));								// Otherwise the "success" property will be treated as the callback
+			cb(parsedResult);
 		});
 	},
 	
@@ -6823,6 +6691,160 @@ Mast.Pattern = {
 }
 
 
+// Bind global events to the Mast dispatcher
+$(function() {
+
+	// $hashchange is defined in mast.js with the routing stuff
+	// $mousemove
+	$(window).bind('mousemove', globalDispatchBinding('$mousemove'));
+
+	// $click
+	$(window).bind('click', globalDispatchBinding('$click'));
+
+	// $pressEnter
+	$(document).bind('gPressEnter', globalDispatchBinding('$pressEnter'));
+
+	// $pressEsc
+	$(document).bind('gPressEsc', globalDispatchBinding('$pressEsc'));
+
+
+
+	// Generate a function which fires the event trigger on the Mast global dispatcher
+	// and passes down arguments from the event handler
+
+
+	function globalDispatchBinding(event) {
+		return function() {
+			Mast.trigger.apply(Mast, ['event:' + event].concat(_.toArray(arguments)));
+		};
+	}
+
+
+
+	// 	function handle(e) {
+	// 		e.stopPropagation();
+	// 		var pressedkeycode = e.keyCode || e.which;
+	// 		if(pressedkeycode === keyCode) {
+	// 			// e.preventDefault();
+	// 			origTarget.triggerHandler( handlerName,e );
+	// 		}
+	// 	}
+
+	// // Create touch event
+	// // var globalScope = false;
+	// $.event.special['touch'] = {
+	// 	// This method gets called the first time this event
+	// 	// is bound to THIS particular element. It will be
+	// 	// called once and ONLY once for EACH element.
+	// 	add: function(eventData, namespaces) {
+	// 		// var target = globalScope ? $(document) : $(this),
+	// 		var target = $(this),
+	// 			origTarget = $(this);
+
+	// 		var isTouch = navigator.userAgent.match(/(iPad|iPhone|iPod|Android|BlackBerry)/ig);
+
+	// 		console.log(eventData, namespaces);
+	// 		var $el = $(this);
+	// 		// $el.unbind('click');
+	// 		// $el.unbind('hover');
+	// 		// $el.unbind('touchstart');
+	// 		// $el.unbind('touchcancel');
+	// 		// $el.unbind('touchmove');
+	// 		// $el.unbind('touchend');
+	// 		// For development purposes, and in case this mobile-optimized experience 
+	// 		// is being consumed on a P&C (point and click) device, 
+	// 		// use click instead of touch when necessary
+	// 		if(!isTouch) {
+
+	// 			$el.bind('click', function(e) {
+	// 				$el.trigger('touch',e);
+	// 			});
+	// 		}
+	// 		// else {
+	// 		console.log("$el", $el);
+	// 		// When the user touches
+	// 		$el.on('touchstart', function(e) {
+	// 			alert("touchstart!!!");
+	// 			window.clearTimeout($el.data('countdownToTapped'));
+	// 			$el.data('countdownToTapped', window.setTimeout(function() {
+	// 				$el.addClass('tapped');
+	// 			}, 5));
+
+	// 			// Always stop propagation on touch events
+	// 			// Sorry :(
+	// 			e.stopPropagation();
+
+	// 			// TODO: Prevent default scroll behavior (in certain situations)
+	// 			// e.preventDefault();
+	// 		});
+
+	// 		// When the user lets go
+	// 		// Touchend cancels the tapCountdown timer
+	// 		// It also fires the event we're interested in if the tapped state is already set
+	// 		$el.on('touchend', function(e) {
+
+	// 			if($el.hasClass('tapped')) {
+	// 				$el.trigger('touch', e);
+	// 			} else {
+	// 				window.clearTimeout($el.data('countdownToTapped'));
+	// 			}
+	// 		});
+
+	// 		// Touchcancel cancels the tapCountdown timer
+	// 		// If the user's finger wanders into browser UI, or the touch otherwise needs to be canceled, the touchcancel event is sent
+	// 		$el.on('touchcancel', function() {
+
+	// 			if($el.hasClass('tapped')) {
+	// 				$el.removeClass('tapped');
+	// 			} else {
+	// 				window.clearTimeout($el.data('countdownToTapped'));
+	// 			}
+	// 		});
+
+	// 		// Touchmove cancels the countdownToTapped timer, as well as cancelling the tapped state if it is set
+	// 		$el.on('touchmove', function(e) {
+
+	// 			if($el.hasClass('tapped')) {
+	// 				$el.removeClass('tapped');
+	// 			} else {
+	// 				window.clearTimeout($el.data('countdownToTapped'));
+	// 			}
+
+	// 			// Prevent propagation of scrolling
+	// 			// e.stopPropagation();
+	// 			// TODO: Prevent default scroll behavior (in certain situations)
+	// 			e.preventDefault();
+	// 		});
+
+	// 		// Return void as we don't want jQuery to use the
+	// 		// native event binding on this element.
+	// 		return;
+	// 	},
+
+	// 	// This method gets called when this event us unbound
+	// 	// from THIS particular element.
+	// 	remove: function(namespaces) {
+
+	// 		var isTouch = navigator.userAgent.match(/(iPad|iPhone|iPod|Android|BlackBerry)/ig);
+	// 		var $el = $(this);
+
+	// 		if(!isTouch) $el.unbind('click');
+	// 		$el.unbind('touchstart');
+	// 		$el.unbind('touchend');
+	// 		$el.unbind('touchmove');
+	// 		$el.unbind('touchcancel');
+
+	// 		// Return void as we don't want jQuery to use the
+	// 		// native event binding on this element.
+	// 		return;
+	// 	}
+	// };
+
+
+
+});
+
+
 // Components are the smallest unit of event handling and logic
 // Components may contain sub-components, but (as of may 12th 2012),
 // they are responsible for calling render on those elements
@@ -6838,6 +6860,9 @@ Mast.Component = {
 
 	// Automatic rendering is enabled by default
 	autoRender: true,
+
+	// If no binding exists for a given attribute, rip the entire template out of the DOM and put it back in
+	naiveRender: true,
 
 	// Set to true the first time this element is appended to the DOM
 	// used for figuring out when to trigger afterCreate
@@ -6931,9 +6956,8 @@ Mast.Component = {
 		// Watch for changes to pattern
 		this.pattern.on('change', this.render);
 
-		// Trigger init event
+		// Trigger beforeCreate and init (legacy) events
 		_.result(this, 'init');
-
 		this.trigger('beforeCreate');
 
 		// If this is being created by a parent element, don't render
@@ -6956,60 +6980,93 @@ Mast.Component = {
 		// Listen to subscriptions
 		if(this.subscriptions) {
 
-			// Get subset of events based on symbol
 			var self = this;
-			var subset = function (symbol) { 
-				return _.filter(_.keys(self.subscriptions),function (key) {
-					return key[0] === symbol;
-				}); 
-			};
 
-			// TODO: bind actions to DOM events
-			// subset("*")
+			// Bind trigger subscriptions to backbone events
+			_.each(this.getSubscriptionSubset("%"), function (trigger) {
+				var action = self.subscriptions[trigger];
+				action =  _.isFunction(action) ? action : self[action];
+				action = _.bind(action,self);
+
+				// Trigger action with dispatched arguments
+				var triggerName = _.str.ltrim(trigger,'%');
+				Mast.on(triggerName,action);
+			});
 
 			
-			// When dispatcher triggers a route event
-			Mast.Dispatcher.on("all", function(pattern){
+			Mast.on("all", function(dispatchedPattern) {
 
-				// TODO: Capture event parameters
-				// var params = _.toArray(arguments);
-				// params.shift();
-				pattern = pattern.match(/^route:(.*)/);
-				if (pattern && pattern.length === 2) {
-					pattern = pattern[1];
-					// console.log("A component ("+this._class+") received a pattern:",pattern);
+				// Grab dispatched arguments
+				var dispatchedArguments = _.toArray(arguments);
+				dispatchedArguments.shift();
 
-					// Look for matching route subscription
-					_.each(subset("#"), function (route) {
 
-						// Normalize index synonym
-						route = (route === "#" || route === "#index") ? "#" : route;
+				// Bind actions to DOM events
+				var pattern = dispatchedPattern.match(/^event:(.*)/);
+				if (pattern && pattern.length == 2) {
 
-						// If pattern matches, disambiguate and trigger action
-						var params = Mast.mixins.matchRoutePattern(pattern,route);
-						// console.log("trying to match "+pattern+ " with the route, "+route,"... I got:",params);
-						if (params) {
-							var action = self.subscriptions[route];
-							// console.log("APPLYING ",action);
+					// Look for matching event subscription
+					_.each(this.getSubscriptionSubset("$"), function (event) {
+						// If a matching event subscription exists, apply it with dispatched arguments
+						if (event === pattern[1]) {
+							var action = self.subscriptions[event];
 							action =  _.isFunction(action) ? action : self[action];
 							action = _.bind(action,self);
-							action.apply(self,params);
+							action.apply(self,dispatchedArguments);
 						}
-					});					
+					});
+				}
+
+				// When dispatcher triggers a route event
+				pattern = dispatchedPattern.match(/^route:(.*)/);
+				if (pattern && pattern.length === 2) {
+					pattern = pattern[1];
+
+					// Look for matching route subscription and trigger it
+					self.triggerRouteSubscription(pattern);			
 				}
 			},this);
+
 			
 			// Bind comet events
-			_.each(subset("~"), function(route) {
+			_.each(this.getSubscriptionSubset("~"), function(route) {
 				var action = self.subscriptions[route];
 				action =  _.isFunction(action) ? action : self[action];
 				action = _.bind(action,self);
 				Mast.Socket.subscribe(route, _.isFunction(action) ? action : this[action], this);
 			}, this);
-
-			// TODO: bind actions to backbone events
-			// the rest of 'em
 		}
+		else {
+			this.subscriptions = {};
+		}
+	},
+
+	// Look for matching route subscription and trigger it
+	triggerRouteSubscription: function ( pattern ) {
+		var self = this;
+		_.each(this.getSubscriptionSubset("#"), function (route) {
+
+			// Normalize index synonym
+			route = (route === "#" || route === "#index") ? "#" : route;
+
+			// If pattern matches, disambiguate and trigger action
+			var params = Mast.mixins.matchRoutePattern(pattern,route);
+			if (params) {
+				var action = self.subscriptions[route];
+				action =  _.isFunction(action) ? action : self[action];
+				action = _.bind(action,self);
+
+				// Run action with combined params
+				action.apply(self,params);
+			}
+		});		
+	},
+
+	// Get subset of events based on symbol
+	getSubscriptionSubset: function (symbol) { 
+		return _.filter(_.keys(this.subscriptions || {}),function (key) {
+			return key[0] === symbol;
+		}); 
 	},
 
 	// Append this component's rendered HTML to the outlet
@@ -7036,6 +7093,10 @@ Mast.Component = {
 		if(!this.appendedOnce) {
 			this.appendedOnce = true;
 			this.trigger('afterCreate');
+
+			// If the current url hash matches a route subscription, trigger it
+			// (it won't have fired yet since the component didn't exist until now)
+			this.triggerRouteSubscription(window.location.hash);
 		}
 
 		// Then trigger afterRender
@@ -7075,17 +7136,26 @@ Mast.Component = {
 	// Render the pattern and subcomponents
 	render: function(silent, changes) {
 		!silent && this.trigger('beforeRender', changes);
-		// console.log("RENDA",changes);
-		// Determine if all changed attributes are bound
-		var allBound = _.all(changes, function(attrVal, attrName) {
-			return !_.isUndefined(this.bindings[attrName]);
-		}, this);
+		
+		// if (this.appendedOnce ? this.naiveRender : true) {
 
-		// if not all attribute changes are bound, or there are no explicit changes, naively rerender
-		if(!allBound || !changes) {
-			this.naiveRender(true, changes);
+		// If naiveRender is true, always use naiverender if bindings don't cover all our bases
+		// otherwise, just do it the first time
+		if (!this.appendedOnce || (this.appendedOnce && this.naiveRender)) {
+			// Determine if all changed attributes are bound
+			var allBound = _.all(changes, function(attrVal, attrName) {
+				return !_.isUndefined(this.bindings[attrName]);
+			}, this);
+
+			// if not all attribute changes are bound, or there are no explicit changes, naively rerender
+			if(!allBound || !changes) {
+				this.doNaiveRender(true, changes);
+			}
+			// Otherwise, perform the specific bindings for this changeset
+			else {
+				this.runBindings(changes);
+			}
 		}
-		// Otherwise, perform the specific bindings for this changeset
 		else {
 			this.runBindings(changes);
 		}
@@ -7100,17 +7170,28 @@ Mast.Component = {
 		var bindingsToPerform = _.keys(changes || this.bindings);
 		_.each(bindingsToPerform, function(attrName) {
 			var handler = this.bindings[attrName];
-			handler = _.isString(handler) ? this[handler] : handler;
 			if(handler) {
-				if(!_.isFunction(handler)) throw new Error("Bindings contain invalid or non-existent function.");
-				handler = _.bind(handler, this);
-				handler(this.get(attrName));
+				// Run binding if a function
+				if(_.isFunction(handler)) {
+					handler = _.bind(handler, this);
+					handler(this.get(attrName));
+				}
+				// For string selector bindings, replace the value or text
+				// (depending on whether this is a form input element or not)
+				else if (_.isString(handler)) {
+					var $el = this.$el.closest_descendant(handler);
+					if (!$el || !$el.length) throw new Error('No element can be found for binding selector: '+handler);
+					var nodeName = $el.get(0).nodeName.toLowerCase();
+					var formy = nodeName === 'input' || nodeName === 'select' || nodeName === 'option' || nodeName === 'button' || nodeName === 'optgroup' || nodeName === 'textarea';
+					formy ? $el.val(this.get(attrName)) : $el.text(this.get(attrName));
+				}
+				else throw new Error("Bindings contain invalid or non-existent function.");
 			}
 		}, this);
 	},
 
 	// Rip existing element out of DOM, replace with new element, then render subcomponents
-	naiveRender: function(silent) {
+	doNaiveRender: function(silent) {
 		// If template is falsy, don't try to render it
 		if(!this.template) {} else {
 			var $element = this.generate();
@@ -7228,7 +7309,7 @@ Mast.Component = {
 		this.off();
 
 		// Unsubscribe all events on dispatcher with this context
-		Mast.Dispatcher.off(null,null,this);
+		Mast.off(null,null,this);
 
 		// Remove from DOM
 		this.$el.remove();
@@ -7327,6 +7408,15 @@ Mast.Component = {
 		});
 	},
 
+	// 
+	fetchModel: function () {
+		this.model.fetch();
+	},
+
+	fetch: function () {
+		return this.fetchModel();
+	},
+
 	// Pass-thru to model.get()
 	get: function(attribute) {
 		return this.pattern.get(attribute);
@@ -7377,8 +7467,10 @@ Mast.Tree = {
 	
 	// Keeps track of hot branch components for memory management
 	_branchStack: [],
+
+	isLoading: false,
 	
-	initialize: function (attributes,options){
+	initialize: function (attributes,options) {
 				
 		// Determine whether specified branch component is a className, class, or instance
 		this.branchComponent = (this.branchComponent && 
@@ -7430,8 +7522,8 @@ Mast.Tree = {
 	},
 	
 	// Do a standard component naive render, but also rerender branches
-	naiveRender: function (silent,changes) {
-		Mast.Component.prototype.naiveRender.call(this,silent,changes);
+	doNaiveRender: function (silent,changes) {
+		Mast.Component.prototype.doNaiveRender.call(this,silent,changes);
 		this.renderBranches(silent,changes);
 	},
 	
@@ -7450,8 +7542,11 @@ Mast.Tree = {
 		_.invoke(this._branchStack,'close');
 		this._branchStack = [];
 		
-		// Append branches or empty HTML to the branchOutlet
-		if (this.collection && !this.collection.length) {
+		// Append branches, empty HTML, or loading HTML to the branchOutlet
+		if (this.collection && this.isLoading && (this.loadingHTML || this.loadingTemplate)) {
+			this.$branchOutlet.append(this._generateLoadingHTML());
+		}
+		else if (this.collection && !this.collection.length) {
 			this.$branchOutlet.append(this._generateEmptyHTML());
 		}
 		else {
@@ -7460,6 +7555,7 @@ Mast.Tree = {
 				self.appendBranch(model,{},true);
 			});
 		}
+
 		!silent && this.trigger('afterRender');
 	},
 	
@@ -7527,6 +7623,31 @@ Mast.Tree = {
 	getBranchesEl: function () {
 		return this.$branchOutlet.children();
 	},
+
+	// Fetch collection and model
+	fetch: function () {
+		this.fetchCollection();
+		this.fetchModel();
+	},
+
+	// fetch items in this collection
+	// keep track of isLoading state
+	fetchCollection: function () {
+		var self = this;
+		self.isLoading = true;
+
+		// Render loading state if relevant
+		this.renderBranches();
+		return this.collection.fetch({
+			success: function () {
+				self.isLoading = false;
+				self.renderBranches();
+			},
+			error: function () {
+				self.isLoading = false;
+			}
+		});
+	},
 			
 	// Generate empty tree html
 	_generateEmptyHTML: function () {
@@ -7538,6 +7659,19 @@ Mast.Tree = {
 		}
 		else {
 			return this.emptyHTML;
+		}
+	},
+
+	// Generate loading html
+	_generateLoadingHTML: function () {
+		if (this.loadingTemplate) {
+			var pattern = new Mast.Pattern({
+				template: this.loadingTemplate
+			});
+			return $(pattern.generate());
+		}
+		else {
+			return this.loadingHTML;
 		}
 	}
 }
