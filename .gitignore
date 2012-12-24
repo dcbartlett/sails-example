@@ -25,3 +25,5 @@ mast/templates/less-output.css
 
 .compiled
 .waterline
+
+npm-debug.log
