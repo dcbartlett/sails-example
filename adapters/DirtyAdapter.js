@@ -1,12 +1,4 @@
-var _ = require('underscore');
-
-var dirtyAdapter = require('waterline-dirty');
-
-dirtyAdapter = _.extend(dirtyAdapter,{
-	config: _.extend(dirtyAdapter.config, {
-		inMemory: false,
-		migrate: 'safe'
-	})
+module.exports = require('waterline-dirty')({
+	// TODO: make this the default setting in the future when 'alter' works
+	inMemory: false
 });
-
-exports = _.extend(exports,dirtyAdapter);
