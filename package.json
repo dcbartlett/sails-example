@@ -1,7 +1,8 @@
 {
-    "name": "sails-example",
-    "version": "12.12.23",
-    "dependencies": {
-        "sails": "git://github.com/balderdashy/sails.git#waterline"
-    }
+  "name": "sails-example",
+  "version": "12.12.23",
+  "dependencies": {
+    "sails": "git://github.com/balderdashy/sails.git#waterline",
+    "waterline-dirty": "0.0.02"
+  }
 }
