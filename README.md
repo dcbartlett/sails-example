@@ -55,3 +55,5 @@ forever -w sails.js
 ![Screen Shot 2012-10-03 at 4.10.23 PM.png](http://i.imgur.com/Q3E0w.png)
 ### Tree structures
 ![Screen Shot 2012-10-03 at 4.10.46 PM.png](http://i.imgur.com/BLebW.png) 
+
+[![githalytics.com alpha](https://cruel-carlota.pagodabox.com/5a697ce06dfd00cf2281eb878190ced1 "githalytics.com")](http://githalytics.com/balderdashy/sails-example)
