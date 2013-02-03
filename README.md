@@ -14,7 +14,7 @@ npm install
 Finally, copy and rename the example config.ex.js file:
 
 ```
-cp config.js.ex config.js
+cp config.ex.js config.js
 ```
 
 And customize it accordingly for your datasource:
